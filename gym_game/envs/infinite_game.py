@@ -423,8 +423,6 @@ class Iterator_Square(pygame.sprite.Sprite):
 
 
 
-
-
 class Perceptor(object):
 
 	def __init__(self, world, frequency, date_time, map_name, num_directions):
@@ -1148,16 +1146,6 @@ class World(object):
 		self.screen.blit(time_rend, (400, 10))
 
 
-############To Remove
-
-		# zoomed_screen = pygame.transform.smoothscale(self.screen, (1500, 1500))
-
-		# self.screen.blit(zoomed_screen, (0,0))
-
-
-
-
-
 
 class Value_Point(pygame.sprite.Sprite):
 
@@ -1178,8 +1166,6 @@ class Value_Point(pygame.sprite.Sprite):
 	def render(self):
 		screen = self.world.screen
 		self.draw(screen)
-
-
 
 
 
@@ -1228,15 +1214,6 @@ class LimitlessFader(pygame.sprite.Sprite):
 		#To implement
 
 		return value
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1335,7 +1312,6 @@ def handle_key_up(world, event_key, last_sword_parameters):
 
 
 
-
 def set_sword_parameters(world, last_sword_parameters):
 
 	if world.shift_down == 2 and world.shift_right == 2:
@@ -1362,12 +1338,6 @@ def set_sword_parameters(world, last_sword_parameters):
 	return last_sword_parameters
 
 
-
-
-
-
-
-
 def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time, num_directions):
 
 
@@ -1391,7 +1361,6 @@ def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, m
 	player_won = False
 
 	
-	
 	perceptor = Perceptor(world, 8, date_time, map_name, num_directions)
 
 	file_path = "Traces/Actions_" + map_name + "_" + date_time + ".txt"
@@ -1413,11 +1382,9 @@ def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, m
 
 		last_update = time.time()
 
-
 		world.key_press_to_write.append(str(world.key_press_list) + "\n")
 
 		world.pos_to_write.append(str(world.player.imagined_x) + "_" + str(world.player.imagined_y) + "\n")
-
 
 
 		world.update()
@@ -1427,9 +1394,6 @@ def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, m
 		
 		pygame.display.flip()
 		#perceptor.render()
-
-		
-
 
 		#handle death
 		if world.player.hp <= 0:
@@ -1692,10 +1656,6 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 
 
 
-
-
-
-
 	world.render()
 
 
@@ -1707,7 +1667,6 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 	save_file = open(save_path, 'w')
 
 	waiting = True
-
 
 
 	s = pygame.Surface((world.screen_width, world.screen_height)) 
@@ -1739,8 +1698,6 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 
 	world.screen.blit(rend, (center_dist, 250))
 
-
-	 
 
 	rend = small_fontzy.render("o seu nível de " + chosen_dimension, 1, (0,0,0))
 
@@ -2114,8 +2071,6 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 
 
 
-
-
 def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions):
 
 
@@ -2296,13 +2251,6 @@ def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width
 
 
 
-
-
-
-
-
-
-
 def email_files(files_to_email, date_time):
 
 	mail_content = '''Hello,
@@ -2347,7 +2295,6 @@ def email_files(files_to_email, date_time):
 	session.sendmail(sender_address, receiver_address, text)
 	session.quit()
 	print('Mail Sent')
-
 
 
 
@@ -2639,12 +2586,6 @@ def play_with_pre_trained_model(trained_model_file, date_time, frame_rate, map_n
 
 
 	return
-
-
-
-
-
-
 
 
 
@@ -2980,30 +2921,8 @@ def parameterized_agent_play(parameters, map_name, render):
 
 
 
-
-def load_parameters(level, cluster):
-    p = ('explore_preference', 'flower_preference', 'kill_preference', 'coin_preference', 'cake_preference', 'randomness', 'cake_health_influence', 'x_preference', 'y_preference')
-    #['distance_to_closest_coin', 'distance_to_closest_enemy', 'distance_to_closest_cake', 'distance_to_objective', 'health', 'exploration']
-    parameters = [0 for x in p]
-    #read file
-    cluster_file = 'irl_weights/' + level + '/' + cluster + '.txt'
-    file = open(cluster_file, 'r')
-    w_values = file.readline().split('_')
-    parameters[0] = int(float(w_values[5]))
-    parameters[1] = int(float(w_values[3]))
-    parameters[2] = int(float(w_values[1]))
-    parameters[3] = int(float(w_values[0]))
-    parameters[4] = int(float(w_values[2]))
-    parameters[6] = int(float(w_values[4]))
-    parameters[-1], parameters[-2] = 0, 0
-    return parameters
-
-
-
-
 # The Main running function
 def main():
-
 
 	pygame.init()
 
@@ -3027,287 +2946,7 @@ def main():
 	screeno = pygame.display.set_mode([map_width, map_height])
 
 
-
-
 	date_time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") + "_" + str(random.randint(0, 1000))
-
-
-	
-
-
-
-################################################################################################
-#																							   #
-#  Uncomment the following lines to replay the original experience used to gather the traces   #
-#																							   #
-################################################################################################
-
-	# questions_file_path = "Answers/Answers_" + date_time + ".txt"
-	# files_to_email.append(questions_file_path)
-	# questions_file = open(questions_file_path,"w+")
-
-
-	# dimensions_list = ["prazer", "excitação", "dominância"]
-
-	# random.shuffle(dimensions_list)
-
-	# chosen_dimension = dimensions_list[0]
-
-	
-	# screen_messages.consentimento(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# screen_messages.recolha_dados(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# screen_messages.questao_idade(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.questao_sexo(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.questao_1(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.questao_2(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.questao_3(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-
-	# screen_messages.hello_screen(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# screen_messages.introducao_ao_tutorial(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# map_name = "Tutorial"
-
-	# file_path, pos_file_path = playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time)
-
-	# if chosen_dimension == "Pleasure":
-	# 	screen_messages.introducao_as_anotacoes_pleasure(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# elif chosen_dimension == "Arousal":
-	# 	screen_messages.introducao_as_anotacoes_arousal(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# elif chosen_dimension == "Dominance":
-	# 	screen_messages.introducao_as_anotacoes_dominance(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-
-	# screen_messages.introducao_as_anotacoes_geral(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# save_path = fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension)
-
-	# screen_messages.obrigado_tutorial(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# map_list = ["Level1", "Level2", "Level3"]
-
-	# random.shuffle(map_list)
-
-	# order_path = "Answers/Order_" + date_time + ".txt"
-	# files_to_email.append(order_path)
-
-	# order_write = open(order_path,"w+")
-
-	# order_write.write(str(map_list))
-
-
-
-
-
-	# nivel_1(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# map_name =  map_list[0] 
-
-	# perceptor_file_path = "Traces/Perceptor_" + map_name + "_" + date_time + ".txt"
-
-	# file_path, pos_file_path = playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time)
-
-	# save_path = fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension)
-
-
-	# files_to_email.append(file_path)
-
-	# files_to_email.append(pos_file_path)
-
-	# files_to_email.append(perceptor_file_path)
-
-	# files_to_email.append(save_path)
-
-
-	# screen_messages.scale_question_intro(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# screen_messages.scale_question_explanation(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# screen_messages.scale_question_1(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_2(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_3(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_4(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_5(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_6(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-
-
-
-
-
-	# nivel_2(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# map_name = map_list[1]
-
-
-	# perceptor_file_path = "Traces/Perceptor_" + map_name + "_" + date_time + ".txt"
-
-	# file_path, pos_file_path = playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time)
-
-	# save_path = fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension)
-
-	# files_to_email.append(file_path)
-
-	# files_to_email.append(pos_file_path)
-
-	# files_to_email.append(perceptor_file_path)
-
-	# files_to_email.append(save_path)
-
-
-	# screen_messages.scale_question_intro(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# screen_messages.scale_question_1(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_2(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_3(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_4(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_5(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_6(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-
-
-
-
-	# nivel_3(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# map_name = map_list[2]
-
-	# perceptor_file_path = "Traces/Perceptor_" + map_name + "_" + date_time + ".txt"
-
-	# file_path, pos_file_path = playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time)
-
-	# save_path = fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension)
-
-	# files_to_email.append(file_path)
-
-	# files_to_email.append(pos_file_path)
-
-	# files_to_email.append(perceptor_file_path)
-
-	# files_to_email.append(save_path)
-
-
-	# screen_messages.scale_question_intro(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, chosen_dimension)
-
-	# screen_messages.scale_question_1(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_2(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_3(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_4(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_5(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-	# screen_messages.scale_question_6(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width, questions_file)
-
-
-	# screen_messages.inserir_numero_aluno(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-	# questions_file.close()
-	# order_write.close()
-
-
-	### To use email, set the email and password on the "email_files" function
-
-	## email_files(files_to_email, date_time)
-
-	# screen_messages.obrigado(small_fontzy, medium_fontzy, big_fontzy, screeno, map_height, map_width)
-
-
-
-
-
-#############################################################################
-#										                                    #
-#  Uncomment the following lines for playing and annotating a single level  #
-#										                                    #
-#############################################################################
-
-	# num_directions = 100
-
-
-	# map_name = "Level3"
-
-	# chosen_dimension = "Arousal"
-
-
-	# file_path, pos_file_path = playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time, num_directions)
-
-	# save_path = fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension, num_directions)
-
-
-
-
-
-
-#################################################################################################################
-#								                                   		                                        #
-#        Uncomment the following lines for playing all generated traces in the "Generated_Traces" folder        #
-#                     (This will generate the perception traces in the "Traces" folder)                         #
-#										                                                                        #
-#################################################################################################################
-
-
-
-	# gen_traces = sorted(glob.glob("./Generated_Traces/*.txt"))
-
-	# num_directions = 100
-
-	# frame_rate = 0.0
-
-	# for genny in gen_traces:
-
-	# 	file_location = genny
-
-	# 	map_name = genny[34:40]
-
-	# 	replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
-
-#################################################################################################################
-#								                                   		                                        #
-#        Uncomment the following lines for playing with a previously trained behavioural model                  #
-#                                                                                                               #
-#										                                                                        #
-#################################################################################################################
-
-
-
-	# map_name = "Level1"
-
-	# num_directions = 100
-
-	# trained_model_file = 'trained_forest.pkl'
-
-
-	# play_with_pre_trained_model(trained_model_file, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
-
-#################################################################################################################
-#								                                   		                                        #
-#                     Uncomment the following lines for playing with an agent                                   #
-#                                                                                                               #
-#										                                                                        #
-#################################################################################################################
-
 
 	map_name = "Level1"
 
@@ -3318,9 +2957,6 @@ def main():
 	parameters = [10, 5, 8, 0, 6, 0, 6, 8, 5]
 	
 	play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
-
-
-
 
 
 			 
