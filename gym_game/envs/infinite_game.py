@@ -14,7 +14,7 @@ from email import encoders
 from sklearn import cluster
 import glob
 #import predictor
-import rule_based_agents
+import gym_game.envs.rule_based_agents as rule_based_agents
 
 
 def get_center(sprite):
