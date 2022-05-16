@@ -3315,9 +3315,7 @@ def main():
 
 	agent_type = rule_based_agents.ParameterAgent
 
-	parameters = load_parameters(map_name, '14_____5')
-
-	parameters = [2, 10, 3, 3, 3, 0, 1, 5, 0]
+	parameters = [10, 5, 8, 0, 6, 0, 6, 8, 5]
 	
 	play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
 
