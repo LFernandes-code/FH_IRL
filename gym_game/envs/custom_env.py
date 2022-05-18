@@ -11,7 +11,10 @@ class FHEnv(gym.Env):
         #self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0]), np.array([10, 10, 10, 10, 10]), dtype=np.int)
 
     def reset(self):
-        pass
+        del self.pygame
+        self.pygame = PyGame2D()
+        obs = self.pygame.observe()
+        return obs
 
     def step(self, action):
         pass
