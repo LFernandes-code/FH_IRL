@@ -14,7 +14,7 @@ from email import encoders
 from sklearn import cluster
 import glob
 #import predictor
-import gym_game.envs.rule_based_agents as rule_based_agents
+import rule_based_agents 
 
 
 def get_center(sprite):
@@ -253,8 +253,6 @@ class Money(pygame.sprite.Sprite):
 
 
 
-
-
 class RiceCake(pygame.sprite.Sprite):
 
 	value = 1
@@ -294,7 +292,6 @@ class RiceCake(pygame.sprite.Sprite):
 		return self.rect.x, self.rect.y
 
 
-
 class Tile(pygame.sprite.Sprite):
 
 	def __init__(self, x_pos, y_pos, world):
@@ -320,7 +317,6 @@ class Tile(pygame.sprite.Sprite):
 		return self.rect.x, self.rect.y
 
 
-
 class GrassTile(Tile):
 
 	def __init__(self, x_pos, y_pos, world):
@@ -338,7 +334,6 @@ class GrassTile(Tile):
 		self.y_size = y_size
 		self.rect = pygame.Rect(x_pos, y_pos, x_size, y_size)
 		self.mask = pygame.mask.from_surface(self.image)
-
 
 
 class RockWall(Tile):
@@ -362,7 +357,6 @@ class RockWall(Tile):
 
 	def update(self):
 		pass
-
 
 
 class Polygon(pygame.sprite.Sprite):
@@ -398,8 +392,6 @@ class Polygon(pygame.sprite.Sprite):
 		screen.blit(self.image, (0,0))
 
 
-
-
 class Iterator_Square(pygame.sprite.Sprite):
 
 	def __init__(self, world, granularity):
@@ -419,8 +411,6 @@ class Iterator_Square(pygame.sprite.Sprite):
 
 	def draw(self, screen):
 		screen.blit(self.image, (self.rect.x, self.rect.y))
-
-
 
 
 class Perceptor(object):
@@ -774,7 +764,6 @@ class Perceptor(object):
 
 
 		pygame.display.flip()
-
 
 
 class World(object):
@@ -1146,7 +1135,6 @@ class World(object):
 		self.screen.blit(time_rend, (400, 10))
 
 
-
 class Value_Point(pygame.sprite.Sprite):
 
 	def __init__(self, world, x_pos, y_pos):
@@ -1166,7 +1154,6 @@ class Value_Point(pygame.sprite.Sprite):
 	def render(self):
 		screen = self.world.screen
 		self.draw(screen)
-
 
 
 class LimitlessFader(pygame.sprite.Sprite):
@@ -1215,7 +1202,48 @@ class LimitlessFader(pygame.sprite.Sprite):
 
 		return value
 
+# game
+class PyGame2D:
+	def __init__(self, map_name, play_type) -> None:
+		pygame.init()
+		logo = pygame.image.load("Images/30-30_samurai_ball_3.png")
+		pygame.display.set_icon(logo)
+		pygame.display.set_caption("Flower Hunter")
 
+		self.map_height = 600
+		self.map_width = 600
+		self.frame_rate = 0.0
+		screeno = pygame.display.set_mode([self.map_height, self.map_width])
+
+		big_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 62)
+		medium_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 32)
+		small_fontzy =  pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 24)
+		self.fonts = [small_fontzy, medium_fontzy, big_fontzy]
+
+		date_time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") + "_" + str(random.randint(0, 1000))
+
+		self.map_name = map_name
+
+		num_directions = 200 #Needs to be divisable by 8
+
+		#self.running = True
+		#self.world = World(self.map_height, self.map_width, 20, self.map_name, self.fonts[0])
+
+		playing_routine(self.frame_rate, map_name, self.map_height, self.map_width, self.fonts[0], self.fonts[1], self.fonts[2], date_time, num_directions)
+
+
+	def action(action):
+		#update
+		pass
+
+	def read_perceptor():
+		pass
+	
+	def evaluate():
+		pass
+
+	def check_objective():
+		pass
 
 def handle_key_down(world, event_key, last_sword_parameters):
 
@@ -1269,7 +1297,6 @@ def handle_key_down(world, event_key, last_sword_parameters):
 			world.shift_up = 2
 
 
-
 def handle_key_up(world, event_key, last_sword_parameters):
 
 
@@ -1309,7 +1336,6 @@ def handle_key_up(world, event_key, last_sword_parameters):
 			world.shift_down = 2
 		else:
 			world.shift_up = 0
-
 
 
 def set_sword_parameters(world, last_sword_parameters):
@@ -1616,7 +1642,6 @@ def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, m
 	postextfile.close()
 
 	return file_path, pos_file_path
-
 
 
 def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, chosen_dimension, num_directions):
@@ -2070,7 +2095,6 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 	return save_path
 
 
-
 def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions):
 
 
@@ -2250,7 +2274,6 @@ def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width
 	return
 
 
-
 def email_files(files_to_email, date_time):
 
 	mail_content = '''Hello,
@@ -2295,7 +2318,6 @@ def email_files(files_to_email, date_time):
 	session.sendmail(sender_address, receiver_address, text)
 	session.quit()
 	print('Mail Sent')
-
 
 
 def play_with_pre_trained_model(trained_model_file, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions):
@@ -2586,7 +2608,6 @@ def play_with_pre_trained_model(trained_model_file, date_time, frame_rate, map_n
 
 
 	return
-
 
 
 def play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions, render = True):
@@ -2885,7 +2906,6 @@ def play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map
 	return action_list, pos_file_path
 
 
-
 def parameterized_agent_play(parameters, map_name, render):
 
 	pygame.init()
@@ -2918,7 +2938,6 @@ def parameterized_agent_play(parameters, map_name, render):
 	action_list, pos_file_path = play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions, render = render)
 
 	return action_list, pos_file_path
-
 
 
 # The Main running function
@@ -2964,7 +2983,8 @@ def main():
 # (if you import this as a module then nothing is executed)
 if __name__=="__main__":
 	# call the main function
-	main()
+	#main()
+	game = PyGame2D("Level1",0)
 
 
 
