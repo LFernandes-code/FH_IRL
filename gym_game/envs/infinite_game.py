@@ -1212,6 +1212,8 @@ class PyGame2D:
 		self.perceptor = Perceptor(self.world, 8, date_time, map_name, self.num_directions)
 		self.player_dead = False
 		self.player_won = False
+		self.key_up = -1
+		self.key_down = -1
 
 
 	def action(self, action):
@@ -1230,12 +1232,22 @@ class PyGame2D:
 				self.player_won = True
 
 		#convert action to key
-		#action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN]
-		#handle_key_down(self.world, event.key, last_sword_parameters)
-		#handle key up
-
-
-		pass
+		action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN, pygame.locals.K_SPACE]
+		if action != 5:
+			#create the event
+			newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+			#add the event to the queue
+			pygame.event.post(newevent_down)
+			#create the event
+			newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+			#add the event to the queue
+			pygame.event.post(newevent_down)
+		
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				handle_key_down(self.world, event.key, last_sword_parameters)
+			if event.type == pygame.KEYUP:
+				handle_key_up(self.world, event.key, last_sword_parameters)
 
 	def observe(self):
 		#read perceptor
