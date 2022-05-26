@@ -1215,14 +1215,18 @@ class PyGame2D:
 
 		#self.running = True
 		self.world = World(self.map_height, self.map_width, 20, self.map_name, self.fonts[0])
+		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
+		self.world.player = self.player
 		self.perceptor = Perceptor(self.world, 8, date_time, map_name, self.num_directions)
 		self.player_won = False
 
-		playing_routine(self.frame_rate, map_name, MAP_HEIGHT, MAP_WIDTH, self.fonts[0], self.fonts[1], self.fonts[2], date_time, self.num_directions)
 
-
-	def action(action):
-		#update
+	def action(self, action):
+		#update playing_routine
+		self.world.update()
+		#handle death
+		if self.world.player.hp <= 0:
+			self.world.player.hp = 0
 		pass
 
 	def observe(self):
@@ -1233,18 +1237,22 @@ class PyGame2D:
 		reward = 0
 		if self.world.player.hp == 0:
 			reward = -1000
-		if self.player_won:
-			reward = 1000
+		# add reward based on distance to goal
+		# add reward based of % coins collected
+		# add reward based of % enemies killed
 
 		return reward
 
 	def is_done(self):
-		#check colision
+		for flower in self.world.flower_group:
+			if self.player.is_collided_with(flower):
+				self.player_won = True
 		pass
 	
 	def view(self):
-        # draw game
-		pass
+        #display playing_routine
+		self.world.render()
+		pygame.display.flip()
 
 def handle_key_down(world, event_key, last_sword_parameters):
 
