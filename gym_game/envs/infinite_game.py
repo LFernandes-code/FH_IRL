@@ -14,6 +14,8 @@ from email import encoders
 
 from sklearn import cluster
 import glob
+
+from sqlalchemy import false
 #import predictor
 import rule_based_agents 
 
@@ -1218,6 +1220,7 @@ class PyGame2D:
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
 		self.perceptor = Perceptor(self.world, 8, date_time, map_name, self.num_directions)
+		self.player_dead = False
 		self.player_won = False
 
 
@@ -1227,6 +1230,11 @@ class PyGame2D:
 		#handle death
 		if self.world.player.hp <= 0:
 			self.world.player.hp = 0
+			self.player_dead = True
+
+		for flower in self.world.flower_group:
+			if self.player.is_collided_with(flower):
+				self.player_won = True
 		pass
 
 	def observe(self):
@@ -1244,13 +1252,13 @@ class PyGame2D:
 		return reward
 
 	def is_done(self):
-		for flower in self.world.flower_group:
-			if self.player.is_collided_with(flower):
-				self.player_won = True
-		pass
-	
+		if self.player_dead or self.player_won:
+			return True
+        
+		return false
+
 	def view(self):
-        #display playing_routine
+        #display play routine
 		self.world.render()
 		pygame.display.flip()
 
