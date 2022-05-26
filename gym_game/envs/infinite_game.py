@@ -6,18 +6,8 @@ import random
 import numpy as np
 from datetime import datetime
 import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
-
-from sklearn import cluster
-import glob
 
 from sqlalchemy import false
-#import predictor
-import rule_based_agents 
 
 MAP_HEIGHT = 600
 MAP_WIDTH = 600
@@ -1232,9 +1222,19 @@ class PyGame2D:
 			self.world.player.hp = 0
 			self.player_dead = True
 
+		last_sword_parameters = set_sword_parameters(self.world, last_sword_parameters)
+		
+		#check objective
 		for flower in self.world.flower_group:
 			if self.player.is_collided_with(flower):
 				self.player_won = True
+
+		#convert action to key
+		#action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN]
+		#handle_key_down(self.world, event.key, last_sword_parameters)
+		#handle key up
+
+
 		pass
 
 	def observe(self):
@@ -1243,19 +1243,21 @@ class PyGame2D:
 	
 	def evaluate(self):
 		reward = 0
-		if self.world.player.hp == 0:
-			reward = -1000
-		# add reward based on distance to goal
+		if self.player_dead:
+			reward = -10000 + self.perceptor.distance_to_objective
+		elif self.player_won:
+			reward = 10000 
 		# add reward based of % coins collected
+		reward += (self.perceptor.money * 1000)
 		# add reward based of % enemies killed
-
+		reward += (self.perceptor.kills * 1000)
 		return reward
 
 	def is_done(self):
 		if self.player_dead or self.player_won:
 			return True
         
-		return false
+		return False
 
 	def view(self):
         #display play routine
@@ -1263,8 +1265,6 @@ class PyGame2D:
 		pygame.display.flip()
 
 def handle_key_down(world, event_key, last_sword_parameters):
-
-
 
 	if event_key == ord(' '):
 
