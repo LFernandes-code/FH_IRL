@@ -17,7 +17,11 @@ class FHEnv(gym.Env):
         return obs
 
     def step(self, action):
-        pass
+        self.pygame.action(action)
+        obs = self.pygame.observe()
+        reward = self.pygame.evaluate()
+        done = self.pygame.is_done()
+        return obs, reward, done, {}
 
     def render(self, mode="human", close=False):
         self.pygame.view()
