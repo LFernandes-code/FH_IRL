@@ -1206,7 +1206,7 @@ class PyGame2D:
 		self.num_directions = 200 #Needs to be divisable by 8
 
 		#self.running = True
-		self.world = World(self.map_height, self.map_width, 20, self.map_name, self.fonts[0])
+		self.world = World(MAP_HEIGHT, MAP_WIDTH, 20, self.map_name, self.fonts[0])
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
 		self.perceptor = Perceptor(self.world, 8, date_time, map_name, self.num_directions)
