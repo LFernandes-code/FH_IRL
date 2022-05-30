@@ -38,3 +38,6 @@ if __name__ == "__main__":
     epsilon_decay = 0.999
     learning_rate = 0.1
     gamma = 0.6
+    env.reset()
+    for i in range(200):
+        env.step(0)

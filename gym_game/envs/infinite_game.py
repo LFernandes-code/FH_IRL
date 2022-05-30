@@ -1217,6 +1217,7 @@ class PyGame2D:
 
 
 	def action(self, action):
+		last_sword_parameters = [30, 12, 270]
 		#update playing_routine
 		self.world.update()
 		#handle death
