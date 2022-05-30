@@ -1184,7 +1184,7 @@ class LimitlessFader(pygame.sprite.Sprite):
 
 # game
 class PyGame2D:
-	def __init__(self, map_name, play_type) -> None:
+	def __init__(self, map_name) -> None:
 		pygame.init()
 		logo = pygame.image.load("Images/30-30_samurai_ball_3.png")
 		pygame.display.set_icon(logo)
