@@ -1192,6 +1192,8 @@ class PyGame2D:
 		pygame.display.set_caption("Flower Hunter")
 
 		
+		self.clock = pygame.time.Clock()
+
 		self.frame_rate = 0.0
 		self.screeno = pygame.display.set_mode([MAP_HEIGHT, MAP_WIDTH])
 
@@ -1238,13 +1240,17 @@ class PyGame2D:
 		action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN, pygame.locals.K_SPACE]
 		if action != 5:
 			#create the event
-			newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
-			#add the event to the queue
-			pygame.event.post(newevent_down)
-			#create the event
-			#newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
-			#add the event to the queue
-			#pygame.event.post(newevent_down)
+			if action != self.key_down:
+				newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+				#add the event to the queue
+				pygame.event.post(newevent_down)
+				self.key_down = action
+			else:
+				self.key_down = -1
+				#create the event
+				newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+				#add the event to the queue
+				pygame.event.post(newevent_down)
 		
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
@@ -1252,9 +1258,6 @@ class PyGame2D:
 			if event.type == pygame.KEYUP:
 				handle_key_up(self.world, event.key, self.last_sword_parameters)
 		
-		while ((time.time() - self.last_update) < self.frame_rate):
-			#self.last_update = time.time() 
-			pass
 
 	def observe(self):
 		#read perceptor
@@ -1282,6 +1285,7 @@ class PyGame2D:
         #display play routine
 		self.world.render()
 		pygame.display.flip()
+		self.clock.tick(60)
 
 def handle_key_down(world, event_key, last_sword_parameters):
 
