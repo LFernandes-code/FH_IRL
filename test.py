@@ -40,5 +40,9 @@ if __name__ == "__main__":
     gamma = 0.6
     env.reset()
     for i in range(2000):
-        env.render()
-        env.step(0)
+        if i % 100 == 0:
+            env.render()
+            env.step(4)
+        else:
+            env.render()
+            env.step(0)
