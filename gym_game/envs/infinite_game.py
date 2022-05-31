@@ -1236,14 +1236,15 @@ class PyGame2D:
 		#convert action to key
 		action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN, pygame.locals.K_SPACE]
 		if action != 5:
+			print("doing action ", action)
 			#create the event
 			newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
 			#add the event to the queue
 			pygame.event.post(newevent_down)
 			#create the event
-			newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+			#newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
 			#add the event to the queue
-			pygame.event.post(newevent_down)
+			#pygame.event.post(newevent_down)
 		
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
