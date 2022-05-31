@@ -39,5 +39,6 @@ if __name__ == "__main__":
     learning_rate = 0.1
     gamma = 0.6
     env.reset()
-    for i in range(200):
+    for i in range(2000):
+        env.render()
         env.step(0)

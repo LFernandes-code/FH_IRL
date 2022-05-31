@@ -1,5 +1,6 @@
 from re import S
 import pygame
+import pygame.locals
 import time
 import math
 import random
@@ -1214,10 +1215,10 @@ class PyGame2D:
 		self.player_won = False
 		self.key_up = -1
 		self.key_down = -1
+		self.last_sword_parameters = [12, -15, 0]
 
 
 	def action(self, action):
-		last_sword_parameters = [30, 12, 270]
 		#update playing_routine
 		self.world.update()
 		#handle death
@@ -1225,7 +1226,7 @@ class PyGame2D:
 			self.world.player.hp = 0
 			self.player_dead = True
 
-		last_sword_parameters = set_sword_parameters(self.world, last_sword_parameters)
+		self.last_sword_parameters = set_sword_parameters(self.world, self.last_sword_parameters)
 		
 		#check objective
 		for flower in self.world.flower_group:
@@ -1246,9 +1247,9 @@ class PyGame2D:
 		
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
-				handle_key_down(self.world, event.key, last_sword_parameters)
+				handle_key_down(self.world, event.key, self.last_sword_parameters)
 			if event.type == pygame.KEYUP:
-				handle_key_up(self.world, event.key, last_sword_parameters)
+				handle_key_up(self.world, event.key, self.last_sword_parameters)
 
 	def observe(self):
 		#read perceptor
