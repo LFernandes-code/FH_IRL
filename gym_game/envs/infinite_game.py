@@ -1219,6 +1219,7 @@ class PyGame2D:
 
 
 	def action(self, action):
+		self.last_update = time.time()
 		#update playing_routine
 		self.world.update()
 		#handle death
@@ -1236,7 +1237,6 @@ class PyGame2D:
 		#convert action to key
 		action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN, pygame.locals.K_SPACE]
 		if action != 5:
-			print("doing action ", action)
 			#create the event
 			newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
 			#add the event to the queue
@@ -1251,6 +1251,10 @@ class PyGame2D:
 				handle_key_down(self.world, event.key, self.last_sword_parameters)
 			if event.type == pygame.KEYUP:
 				handle_key_up(self.world, event.key, self.last_sword_parameters)
+		
+		while ((time.time() - self.last_update) < self.frame_rate):
+			#self.last_update = time.time() 
+			pass
 
 	def observe(self):
 		#read perceptor
