@@ -447,7 +447,7 @@ class Perceptor(object):
 		self.last_update = time.time()
 
 		file_name = "Traces/Perceptor_" + map_name + "_" + date_time + ".txt"
-		self.save_file = open(file_name,"w+")
+		#self.save_file = open(file_name,"w+")
 
 
 	def create_polygons(self):
@@ -1224,6 +1224,8 @@ class PyGame2D:
 		self.last_update = time.time()
 		#update playing_routine
 		self.world.update()
+		self.perceptor.update()
+
 		#handle death
 		if self.world.player.hp <= 0:
 			self.world.player.hp = 0
@@ -1240,17 +1242,27 @@ class PyGame2D:
 		action_keys = [pygame.locals.K_RIGHT, pygame.locals.K_LEFT, pygame.locals.K_UP, pygame.locals.K_DOWN, pygame.locals.K_SPACE]
 		if action != 5:
 			#create the event
-			if action != self.key_down:
+			if self.key_down == -1:
+				newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+				#add the event to the queue
+				pygame.event.post(newevent_down)
+				self.key_down = action
+			elif action == self.key_down:
 				newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
 				#add the event to the queue
 				pygame.event.post(newevent_down)
 				self.key_down = action
 			else:
-				self.key_down = -1
 				#create the event
-				newevent_down = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
+				newevent_down = pygame.event.Event(pygame.locals.KEYDOWN, key=action_keys[action], mod=pygame.locals.KMOD_NONE)
 				#add the event to the queue
 				pygame.event.post(newevent_down)
+
+				newevent_up = pygame.event.Event(pygame.locals.KEYUP, key=action_keys[self.key_down], mod=pygame.locals.KMOD_NONE)
+				#add the event to the queue
+				pygame.event.post(newevent_up)
+
+				self.key_down = action
 		
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
@@ -1260,8 +1272,9 @@ class PyGame2D:
 		
 
 	def observe(self):
-		#read perceptor
-		pass
+		perceptor_values = []
+		perceptor_values.append(self.perceptor.hp)
+		return perceptor_values
 	
 	def evaluate(self):
 		reward = 0
@@ -1284,8 +1297,11 @@ class PyGame2D:
 	def view(self):
         #display play routine
 		self.world.render()
+		self.perceptor.render()
 		pygame.display.flip()
-		self.clock.tick(60)
+		while ((time.time() - self.last_update) < self.frame_rate):
+			pass
+		#self.clock.tick(60)
 
 def handle_key_down(world, event_key, last_sword_parameters):
 
@@ -1407,20 +1423,3 @@ def set_sword_parameters(world, last_sword_parameters):
 # (if you import this as a module then nothing is executed)
 if __name__=="__main__":
 	game = PyGame2D("Level1",0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

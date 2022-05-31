@@ -31,8 +31,18 @@ if __name__ == "__main__":
     
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     env.reset()
-    for i in range(1000):
-        env.step(0)
+    # 1 tick = 0.004seconds
+    done = False
+    for i in range(2500):
+        print(i)
+        if i < 150:
+            _, _ , done , _ = env.step(0)
+        else:
+            _, _ , done , _ = env.step(3)
+        
+        if done:
+            break
+        
         env.render()
     
 

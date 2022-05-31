@@ -10,7 +10,7 @@ class FHEnv(gym.Env):
         self.pygame = PyGame2D(self.map)
         # actions: RIGHT, LEFT, UP, DOWN, ATTACK, EMPTY
         self.action_space = spaces.Discrete(6)
-        #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health
+        #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, dist_from_start
         self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0]), np.array([300, 300, 300, 300, 100]), dtype=np.int)
 
     def reset(self):
