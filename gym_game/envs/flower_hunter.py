@@ -2632,6 +2632,7 @@ class PyGame2D:
 
 
 	def action(self, action):
+		game_actions = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
 		self.last_update = time.time()
 		self.world.pos_to_write.append(str(self.world.player.imagined_x) + "_" + str(self.world.player.imagined_y) + "\n")
 		#update playing_routine
@@ -2649,7 +2650,6 @@ class PyGame2D:
 					self.postextfile.write(pos_to_write)
 				self.postextfile.close()
 
-		self.last_sword_parameters = set_sword_parameters(self.world, self.last_sword_parameters)
 		
 		#check objective
 		for flower in self.world.flower_group:
@@ -2662,38 +2662,152 @@ class PyGame2D:
 						self.postextfile.write(pos_to_write)
 					self.postextfile.close()
 
-		#convert action to key
-		action_keys = ['d', 'a', 'w', 's', 'attack', 'go_collect', 'go_health', 'go_obj', 'wait']
-		if action < 4:
-			#simple actions
-			action_k = action_keys[action]
-			if action_k == 'w':
-				self.world.shift_down = 2
-				self.world.shift_up = 0
-				self.world.shift_right = 0
-				self.world.shift_left = 0
+		self.last_sword_parameters = set_sword_parameters(self.world, self.last_sword_parameters)
+		#preform action
 
-			elif action_k == 's':
-				self.world.shift_down = 0
-				self.world.shift_up = 2
-				self.world.shift_right = 0
-				self.world.shift_left = 0
+		self.actions_to_save = [self.counter]
 
-			elif action_k == 'a':
-				self.world.shift_down = 0
-				self.world.shift_up = 0
-				self.world.shift_right = 2
-				self.world.shift_left = 0
+		if action == 'n':
+			self.action_list.append(self.actions_to_save)
+		else:
+			for letter in action:
+				self.actions_to_save.append(letter)
+			self.action_list.append(self.actions_to_save)
 
-			elif action_k == 'd':
-				self.world.shift_down = 0
-				self.world.shift_up = 0
-				self.world.shift_right = 0
-				self.world.shift_left = 2
-		elif action < 8:
-			#abstract actions
-			pass
-		
+		if action == 'n':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+
+		elif action == ' ':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'w':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+
+		elif action == 's':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+
+		elif action == 'a':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+
+		elif action == 'd':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+
+		elif action == 'wa':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+
+		elif action == 'wd':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+
+		elif action == 'sa':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+
+		elif action == 'sd':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+
+		elif action == 'w ':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 's ':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 0
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'a ':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'd ':
+			self.world.shift_down = 0
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'wa ':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'wd ':
+			self.world.shift_down = 2
+			self.world.shift_up = 0
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'sa ':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 2
+			self.world.shift_left = 0
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
+
+		elif action == 'sd ':
+			self.world.shift_down = 0
+			self.world.shift_up = 2
+			self.world.shift_right = 0
+			self.world.shift_left = 2
+			swordy = Sword(self.world.player.rect.x + self.last_sword_parameters[0], self.world.player.rect.y + self.last_sword_parameters[1], self.world, self.last_sword_parameters[2])
+			self.world.weapon_group.add(swordy)
+			self.world.all_group.add(swordy)
 
 	def observe(self):
 		perceptor_values = []
