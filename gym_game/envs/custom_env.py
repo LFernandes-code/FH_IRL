@@ -1,17 +1,20 @@
 import gym
 from gym import spaces
 import numpy as np
-from gym_game.envs.infinite_game import PyGame2D
+from gym_game.envs.flower_hunter import PyGame2D
 
 class FHEnv(gym.Env):
     #metadata = {'render.modes' : ['human']}
     def __init__(self, map_name):
         self.map = map_name
+        self.game_actions = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
         self.pygame = PyGame2D(self.map)
-        # actions: RIGHT, LEFT, UP, DOWN, ATTACK, EMPTY
-        self.action_space = spaces.Discrete(6)
+        # actions: ['w', 's', 'a', 'd', 'attack', 'go_collect', 'go_health', 'go_obj', 'wait']
+        self.action_space = spaces.Discrete(8)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, dist_from_start
-        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0]), np.array([300, 300, 300, 300, 100]), dtype=np.int)
+        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0, 0]), np.array([300, 300, 300, 300, 100, 300]), dtype=np.int)
+        self.doing_action = False
+        self.action_plan = []
 
     def reset(self):
         map_used = self.map
@@ -21,7 +24,8 @@ class FHEnv(gym.Env):
         return obs
 
     def step(self, action):
-        self.pygame.action(action)
+        game_action = self.convert_action_to_game_action(action)
+        self.pygame.action(game_action)
         obs = self.pygame.observe()
         reward = self.pygame.evaluate()
         done = self.pygame.is_done()
@@ -29,3 +33,9 @@ class FHEnv(gym.Env):
 
     def render(self, mode="human", close=False):
         self.pygame.view()
+
+    def convert_action_to_game_action(self, action):
+        if action < 4:
+            return self.game_actions[action + 2]
+        #check if action is complex
+        pass
