@@ -2,9 +2,43 @@
 #convert pos to player relative X
 #create nodes
 #A*
-
-import collections
 import math
+import heapq
+from warnings import warn
+import time
+
+class Node():
+    """A node class for A* Pathfinding"""
+
+    def __init__(self, parent=None, position=None):
+        self.parent = parent
+        self.position = position
+
+        self.g = 0
+        self.h = 0
+        self.f = 0
+
+    def update_cost(self):
+        self.f = self.g + self.h
+
+    def __eq__(self, other):
+        return self.position == other.position
+
+    # defining less than for purposes of heap queue
+    def __lt__(self, other):
+      return self.f < other.f
+    
+    # defining greater than for purposes of heap queue
+    def __gt__(self, other):
+      return self.f > other.f
+
+def return_path(current_node):
+    path = []
+    current = current_node
+    while current is not None:
+        path.append(current.position)
+        current = current.parent
+    return path[::-1] 
 
 class Mem_Map():
     def __init__(self, map_name):
@@ -64,7 +98,73 @@ class Mem_Map():
         (x2,y2) = end_postion
         return math.fabs(x1 - x2) + math.fabs(y1 - y2)
 
-    def a_star(start_position, end_position):
-        pass
+    def a_star(self, start_position, end_position, max_iterations = 1000):
+        # Create start and end node
+        start_node = Node(None, start_position)
+        end_node = Node(None, end_position)
+        start_node.g = start_node.h = start_node.f = 0
+        end_node.g = end_node.h = end_node.f = 0  
+
+        # Initialize both open and closed list
+        frontier = []
+        closed_list = []
+
+        # Heapify the frontier and Add the start node
+        heapq.heapify(frontier) 
+        heapq.heappush(frontier, start_node)
+
+        # Adding a stop condition
+        outer_iterations = 0
+
+        # Loop until you find the end
+        while len(frontier) > 0:
+            outer_iterations += 1
+
+            if outer_iterations > max_iterations:
+                # if we hit this point return the path such as it is
+                # it will not contain the destination
+                warn("giving up on pathfinding too many iterations")
+                return return_path(current_node)    
+            
+            # Get the current node
+            current_node = heapq.heappop(frontier)
+            closed_list.append(current_node)
+
+            # Found the goal
+            if current_node == end_node:
+                return return_path(current_node)
+
+            # Generate children
+            children = []
+            adj_positions = self.get_neightbours(current_node.position)
+            for position in adj_positions:
+                # Create new node
+                new_node = Node(current_node, position)
+                # Append
+                children.append(new_node)
+
+            # Loop through children
+            for child in children:
+                # Child is on the closed list
+                if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
+                    continue
+                
+                # Create the f, g, and h values
+                child.g = current_node.g + 1
+                child.h = self.h(child.position, end_position)
+                child.f = child.g + child.h
+
+                # Child is already in the open list
+                if len([open_node for open_node in frontier if child.position == open_node.position and child.g > open_node.g]) > 0:
+                    continue
+
+                # Add the child to the open list
+                heapq.heappush(frontier, child)
+
+        warn("Couldn't get a path to destination")
+        return None
 
 map = Mem_Map('Level1')
+start_time = time.time()
+print(map.a_star((0,0), (21,0)))
+print("--- %s seconds ---" % (time.time() - start_time))
