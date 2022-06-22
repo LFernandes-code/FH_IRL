@@ -2,13 +2,15 @@ import gym
 from gym import spaces
 import numpy as np
 from gym_game.envs.flower_hunter import PyGame2D
+from gym_game.envs.map_loader import *
 
 class FHEnv(gym.Env):
     #metadata = {'render.modes' : ['human']}
     def __init__(self, map_name):
-        self.map = map_name
+        self.map_id = map_name
         self.game_actions = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
-        self.pygame = PyGame2D(self.map)
+        self.pygame = PyGame2D(self.map_id)
+        self.map = Mem_Map(self.map_id)
         # actions: ['w', 's', 'a', 'd', 'attack', 'go_collect', 'go_health', 'go_obj', 'wait']
         self.action_space = spaces.Discrete(8)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, dist_from_start
@@ -17,7 +19,7 @@ class FHEnv(gym.Env):
         self.action_plan = []
 
     def reset(self):
-        map_used = self.map
+        map_used = self.map_id
         del self.pygame
         self.pygame = PyGame2D(map_used)
         obs = self.pygame.observe()

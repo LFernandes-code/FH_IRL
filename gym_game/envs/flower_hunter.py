@@ -10,10 +10,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-import screen_messages
+#import screen_messages
 import glob
-import predictor
-import rule_based_agents
+#import predictor
+#import rule_based_agents
 MAP_HEIGHT = 600
 MAP_WIDTH = 600
 
@@ -2616,7 +2616,6 @@ class PyGame2D:
 
 		self.num_directions = 8 #Needs to be divisable by 8
 
-		#self.running = True
 		self.world = World(MAP_HEIGHT, MAP_WIDTH, 20, self.map_name, self.fonts[0])
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
@@ -2626,6 +2625,8 @@ class PyGame2D:
 		self.key_up = -1
 		self.key_down = -1
 		self.last_sword_parameters = [12, -15, 0]
+		self.saving_data = saving_data
+		
 		if self.saving_data:
 			self.pos_file_path = "Traces/Gym_Bot_Position_" + self.map_name + "_" + self.date_time + ".txt"
 			self.postextfile = open(self.pos_file_path, 'w')

@@ -4,8 +4,11 @@
 #A*
 import math
 import heapq
+from unicodedata import name
 from warnings import warn
 import time
+
+from gym_game.envs.flower_hunter import main
 
 class Node():
     """A node class for A* Pathfinding"""
@@ -17,9 +20,6 @@ class Node():
         self.g = 0
         self.h = 0
         self.f = 0
-
-    def update_cost(self):
-        self.f = self.g + self.h
 
     def __eq__(self, other):
         return self.position == other.position
@@ -102,8 +102,6 @@ class Mem_Map():
         # Create start and end node
         start_node = Node(None, start_position)
         end_node = Node(None, end_position)
-        start_node.g = start_node.h = start_node.f = 0
-        end_node.g = end_node.h = end_node.f = 0  
 
         # Initialize both open and closed list
         frontier = []
@@ -164,7 +162,9 @@ class Mem_Map():
         warn("Couldn't get a path to destination")
         return None
 
-map = Mem_Map('Level1')
-start_time = time.time()
-print(map.a_star((0,0), (21,0)))
-print("--- %s seconds ---" % (time.time() - start_time))
+if __name__ == "__main__":
+    start_time = time.time()
+    map = Mem_Map('Level1')
+    path = map.a_star((0,0), (21,1))
+    print(path)
+    print("--- %s seconds ---" % (time.time() - start_time))
