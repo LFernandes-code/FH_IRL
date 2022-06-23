@@ -2609,8 +2609,10 @@ class PyGame2D:
 		self.num_directions = 8 #Needs to be divisable by 8
 
 		self.world = World(MAP_HEIGHT, MAP_WIDTH, 20, self.map_name, self.fonts[0])
+		
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
+		
 		self.perceptor = Perceptor(self.world, math.inf, date_time, map_name, self.num_directions)
 		self.world.perceptor = self.perceptor
 		
@@ -2621,6 +2623,11 @@ class PyGame2D:
 		self.player_won = False
 		self.last_sword_parameters = [12, -15, 0]
 		self.saving_data = saving_data
+
+		self.counter = 0
+		self.action_list = []
+		self.action_space = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
+
 		
 		if self.saving_data:
 			self.pos_file_path = "Traces/Gym_Bot_Position_" + self.map_name + "_" + self.date_time + ".txt"
@@ -2628,7 +2635,6 @@ class PyGame2D:
 
 
 	def action(self, action):
-		game_actions = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
 		self.last_update = time.time()
 		self.world.pos_to_write.append(str(self.world.player.imagined_x) + "_" + str(self.world.player.imagined_y) + "\n")
 		#update playing_routine
