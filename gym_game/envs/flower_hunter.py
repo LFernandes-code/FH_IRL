@@ -433,6 +433,7 @@ class Perceptor(object):
 
 
 		self.distance_closest_enemy = float('inf')
+		self.position_closest_enemy = (0, 0)
 		self.distance_closest_food_item = float('inf')
 		self.distance_closest_money = float('inf')
 		self.distance_to_objective = float('inf')
@@ -499,20 +500,16 @@ class Perceptor(object):
 
 
 
-
-
-
-
 	def update(self):
-
 		self.current_perceptions = []
-
 		if (time.time() - self.last_update) > 1/self.frequency:
 
 			previous_distance_closest_enemy = self.distance_closest_enemy
 			self.number_enemies_view = 0
 			self.sum_enemy_values = 0
 			self.distance_closest_enemy = float('inf')
+			self.position_closest_enemy = (0, 0)
+		
 			self.sum_value_slash_distance_enemies = 0
 			for enemy in self.world.enemy_group:
 				if self.world.in_view(enemy):
@@ -523,6 +520,8 @@ class Perceptor(object):
 					self.sum_value_slash_distance_enemies += enemy.value*10/distance
 					if distance < self.distance_closest_enemy:
 						self.distance_closest_enemy = distance
+						self.position_closest_enemy = (enemy.rect.x, enemy.rect.x)
+						print('EEEEEEEEEEEEEEEE',self.position_closest_enemy)
 
 			self.seconds_since_enemy = int(time.time() - self.last_enemy_time)
 
@@ -637,6 +636,7 @@ class Perceptor(object):
 			self.fader_can_write = True
 
 			self.to_save_buffer.append(self.current_perceptions)
+			print('QQQQQQQQQQQQQQQQQQQQQq', self.to_save_buffer)
 
 	def get_perception_vec(self, relevant_group):
 
@@ -777,9 +777,7 @@ class World(object):
 
 	def __init__(self, screen_width, screen_height, tile_size, world_type, small_fontzy):
 
-
 		self.speed = 5
-
 
 		self.x_pos = 0
 		self.y_pos = 0
@@ -787,7 +785,6 @@ class World(object):
 		self.world_type = world_type
 
 		self.timer = time.time()
-		
 
 		#0 -> not shifting
 		#1 -> key to shift is pressed but the opposite key was pressed afterwards and has priority
@@ -840,12 +837,8 @@ class World(object):
 		self.iterator_square = Iterator_Square(self, 20)
 
 
-		
-
-
 
 	def load(self, file_name):
-
 		file_path = "Maps/" + file_name + ".csv"
 
 		f = open(file_path, "r")
@@ -2598,7 +2591,6 @@ class PyGame2D:
 		logo = pygame.image.load("Images/30-30_samurai_ball_3.png")
 		pygame.display.set_icon(logo)
 		pygame.display.set_caption("Flower Hunter")
-
 		
 		self.clock = pygame.time.Clock()
 
@@ -2619,11 +2611,14 @@ class PyGame2D:
 		self.world = World(MAP_HEIGHT, MAP_WIDTH, 20, self.map_name, self.fonts[0])
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
-		self.perceptor = Perceptor(self.world, 8, date_time, map_name, self.num_directions)
+		self.perceptor = Perceptor(self.world, math.inf, date_time, map_name, self.num_directions)
+		self.world.perceptor = self.perceptor
+		
+		self.world.update()
+		self.perceptor.update()
+
 		self.player_dead = False
 		self.player_won = False
-		self.key_up = -1
-		self.key_down = -1
 		self.last_sword_parameters = [12, -15, 0]
 		self.saving_data = saving_data
 		
@@ -2811,9 +2806,7 @@ class PyGame2D:
 			self.world.all_group.add(swordy)
 
 	def observe(self):
-		perceptor_values = []
-		perceptor_values.append(self.perceptor.hp)
-		return perceptor_values
+		return self.perceptor.to_save_buffer[-1]
 	
 	def evaluate(self):
 		reward = 0

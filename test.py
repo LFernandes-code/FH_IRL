@@ -32,10 +32,14 @@ def get_action(a_id):
         print(acs[a_id])
     elif a_id < 8:
         print(acs[a_id])
-    
+
+def get_dir(pl_pos, en_pos):
+    pass
+
 if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     env.reset()
+    env.step(3)
     """
     # 1 tick = 0.004seconds
     done = False
