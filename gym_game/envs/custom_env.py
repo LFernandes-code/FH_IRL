@@ -48,6 +48,14 @@ class FHEnv(gym.Env):
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
+            if self.action_plan:
+                return self.action_plan.pop(0)
+            else:
+                #run A-star
+                p_position = (self.world.player.imagined_x, self.world.player.imagined_y)
+                positions = self.map.a_star(p_position, item_position)
+                #execute action plan
+                pass
         elif action == 7:
             #(complex) go to dynamic object
             enemy_dir = self.get_direction_of_closest_enemy()
