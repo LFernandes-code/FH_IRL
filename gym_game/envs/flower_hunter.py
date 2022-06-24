@@ -814,6 +814,7 @@ class World(object):
 		self.weapon_group = pygame.sprite.Group()
 		self.player = None
 
+
 		self.screen_width = screen_width
 		self.screen_height = screen_height
 
@@ -828,7 +829,6 @@ class World(object):
 			# TODO
 		else:
 			self.load(self.world_type)
-
 
 		self.screen = pygame.display.set_mode([self.screen_width, self.screen_height])
 		self.font = small_fontzy
