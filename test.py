@@ -9,11 +9,10 @@ import gym_game
 import time
 
 
-
 if __name__ == "__main__":
-    #env = gym.make("FlowerHunter-v0.1", map_name = "Level1")
-    #env.reset()
-    #env.step(3)
+    env = gym.make("FlowerHunter-v0", map_name = "Level1")
+    env.reset()
+    env.step(3)
     """
     done = False
     for i in range(2500):
@@ -29,4 +28,3 @@ if __name__ == "__main__":
         env.render()
     
     """
-  
