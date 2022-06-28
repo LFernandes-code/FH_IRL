@@ -52,15 +52,34 @@ class FHEnv(gym.Env):
                 return self.action_plan.pop(0)
             else:
                 #run A-star
-                p_position = (self.world.player.imagined_x, self.world.player.imagined_y)
-                positions = self.map.a_star(p_position, item_position)
-                #execute action plan
-                pass
+                p_cell = self.convert_position_to_cell((self.world.player.imagined_x, self.world.player.imagined_y))
+                item_cell = self.convert_position_to_cell(item_position)
+                action_diretions = self.map.a_star(p_cell, item_cell)
+                for direction in action_diretions:
+                    self.action_plan.append(self.action_tuple_to_key(direction))
+                    self.action_plan.append(self.action_tuple_to_key(direction))
+
+                return self.action_plan.pop(0)
+                
         elif action == 7:
             #(complex) go to dynamic object
             enemy_dir = self.get_direction_of_closest_enemy()
             return self.attack_direction_action(enemy_dir)
-    
+
+    def action_tuple_to_key(self, action_tuple):
+        (x,y) = action_tuple
+        action = ""
+        if y > 0:
+            action += "s"
+        elif y < 0:
+            action += "w"
+        if x > 0:
+            action += "d"
+        elif x < 0:
+            action += "a"
+
+        return action
+
     def get_direction_of_closest_enemy(self):
         distance_closest_enemy = self.pygame.perceptor.distance_closest_enemy
         for enemy in self.pygame.world.enemy_group:
@@ -123,3 +142,6 @@ class FHEnv(gym.Env):
         if self.pygame.perceptor.distance_closest_enemy < 65:
             action = action + ' '
         return action
+
+    def convert_position_to_cell(self, position):
+        return tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
