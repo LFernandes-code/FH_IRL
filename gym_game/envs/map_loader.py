@@ -8,14 +8,13 @@ from unicodedata import name
 from warnings import warn
 import time
 
-from gym_game.envs.flower_hunter import main
-
 class Node():
     """A node class for A* Pathfinding"""
 
-    def __init__(self, parent=None, position=None):
+    def __init__(self, parent = None, position = None, action = None):
         self.parent = parent
         self.position = position
+        self.action = action
 
         self.g = 0
         self.h = 0
@@ -36,9 +35,19 @@ def return_path(current_node):
     path = []
     current = current_node
     while current is not None:
+        path.append(current.action)
+        current = current.parent
+    final_path = path[::-1] 
+    return final_path[1:]
+"""
+def return_path(current_node):
+    path = []
+    current = current_node
+    while current is not None:
         path.append(current.position)
         current = current.parent
     return path[::-1] 
+"""
 
 class Mem_Map():
     def __init__(self, map_name):
@@ -137,7 +146,8 @@ class Mem_Map():
             adj_positions = self.get_neightbours(current_node.position)
             for position in adj_positions:
                 # Create new node
-                new_node = Node(current_node, position)
+                node_Action = tuple(map(lambda i, j: i - j, position, current_node.position))
+                new_node = Node(current_node, position, node_Action)
                 # Append
                 children.append(new_node)
 
@@ -164,7 +174,7 @@ class Mem_Map():
 
 if __name__ == "__main__":
     start_time = time.time()
-    map = Mem_Map('Level1')
-    path = map.a_star((0,0), (21,1))
+    Map = Mem_Map('Level1')
+    path = Map.a_star((0,0), (21,1))
     print(path)
     print("--- %s seconds ---" % (time.time() - start_time))
