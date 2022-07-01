@@ -20,6 +20,7 @@ class FHEnv(gym.Env):
         
         self.doing_action = False
         self.action_plan = []
+        self.current_action = -1
 
     def reset(self):
         map_used = self.map_id
@@ -48,7 +49,8 @@ class FHEnv(gym.Env):
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
-            if self.action_plan:
+            if action == self.current_action:
+                #execute plan
                 return self.action_plan.pop(0)
             else:
                 #run A-star
