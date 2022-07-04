@@ -52,13 +52,13 @@ class FHEnv(gym.Env):
             obs.append(int(self.observation_space.high[0]))
         #dist_to_enemy
         if per[0][:-1] == 'inf':
-            obs.append(int(self.observation_space.high[0]))
+            obs.append(int(self.observation_space.high[1]))
         #dist_to_coin
         if per[2][:-1] == 'inf':
-            obs.append(int(self.observation_space.high[0]))
+            obs.append(int(self.observation_space.high[2]))
         #dist_to_cake
         if per[1][:-1] == 'inf':
-            obs.append(int(self.observation_space.high[0]))
+            obs.append(int(self.observation_space.high[3]))
         #health
         obs.append(int(per[-9][:-1]))
         #% of coins

@@ -416,7 +416,7 @@ class Iterator_Square(pygame.sprite.Sprite):
 
 class Perceptor(object):
 
-	def __init__(self, world, frequency, date_time, map_name, num_directions, saving_data = True):
+	def __init__(self, world, frequency, date_time, map_name, num_directions, saving_data = True, save_folder = 'Traces'):
 
 		self.world = world
 		self.player = world.player
@@ -430,6 +430,7 @@ class Perceptor(object):
 		self.create_polygons()
 
 		self.saving_data = saving_data
+		self.save_folder = save_folder
 
 
 		self.distance_closest_enemy = float('inf')
@@ -467,7 +468,7 @@ class Perceptor(object):
 
 		self.last_update = time.time()
 		if self.saving_data:
-			self.file_name = "Traces/Perceptor_" + map_name + "_" + date_time + ".txt"
+			self.file_name = self.save_folder + "/Perceptor_" + map_name + "_" + date_time + ".txt"
 			self.save_file = open(self.file_name,"w+")
 
 
@@ -521,7 +522,6 @@ class Perceptor(object):
 					if distance < self.distance_closest_enemy:
 						self.distance_closest_enemy = distance
 						self.position_closest_enemy = (enemy.rect.x, enemy.rect.x)
-						print('EEEEEEEEEEEEEEEE',self.position_closest_enemy)
 
 			self.seconds_since_enemy = int(time.time() - self.last_enemy_time)
 
@@ -2067,7 +2067,7 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 
 
 
-def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions):
+def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions, save_perceptor = False):
 
 
 	#variable to control the main loop
@@ -2083,7 +2083,7 @@ def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width
 	player = Player(world.screen_width/2 -15, world.screen_height/2 -15, world)
 	world.player = player
 
-	perceptor = Perceptor(world, math.inf, date_time, map_name, num_directions)
+	perceptor = Perceptor(world, math.inf, date_time, map_name, num_directions, save_perceptor)
 
 	to_save_buffer = []
 
@@ -2292,7 +2292,6 @@ def email_files(files_to_email, date_time):
 	session.sendmail(sender_address, receiver_address, text)
 	session.quit()
 	print('Mail Sent')
-
 
 
 
