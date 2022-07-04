@@ -65,20 +65,28 @@ class Mem_Map():
         #final position list
         reletavive_position_pairs = []
         player_position = ()
+
+        #number of items
+        self.number_of_coins = 0
+        self.number_of_enemies = 0
+        self.number_of_cakes = 0
             
         for line in lines:
             line = line.replace('	', '')
             line = line.replace(';', '')
             column_count = 0
             for letter in line:
-                if letter == '.':
+                if letter == '.' or letter == '0':
                     _position_pairs.append((column_count,line_count))
                 elif letter == "r":
                     _position_pairs.append((column_count,line_count))
+                    self.number_of_cakes += 1
                 elif letter == "m":
                     _position_pairs.append((column_count,line_count))
+                    self.number_of_coins += 1
                 elif letter == "f":
                     _position_pairs.append((column_count,line_count))
+                    self.number_of_enemies += 1
                 elif letter == 'p':
                     player_position = (column_count,line_count)
                     

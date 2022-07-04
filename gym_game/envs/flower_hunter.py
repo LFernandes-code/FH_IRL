@@ -636,7 +636,6 @@ class Perceptor(object):
 			self.fader_can_write = True
 
 			self.to_save_buffer.append(self.current_perceptions)
-			print('QQQQQQQQQQQQQQQQQQQQQq', self.to_save_buffer)
 
 	def get_perception_vec(self, relevant_group):
 

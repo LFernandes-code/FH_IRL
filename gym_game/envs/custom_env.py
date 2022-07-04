@@ -14,9 +14,10 @@ class FHEnv(gym.Env):
         self.pygame = PyGame2D(self.map_id)
         self.map = Mem_Map(self.map_id)
         
-        self.action_space = spaces.Discrete(8)
-        #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health
-        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0]), np.array([301, 301, 301, 301, 100]), dtype=np.int)
+        #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
+        self.action_space = spaces.Discrete(9)
+        #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
+        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0, 0, 0]), np.array([301, 301, 301, 301, 100, 1, 1]), dtype=np.float)
         
         self.doing_action = False
         self.action_plan = []
@@ -26,19 +27,50 @@ class FHEnv(gym.Env):
         map_used = self.map_id
         del self.pygame
         self.pygame = PyGame2D(map_used)
-        obs = self.pygame.observe()
+        obs = self.observe_world()
         return obs
 
     def step(self, action):
         game_action = self.convert_action_to_game_action(action)
         self.pygame.action(game_action)
-        obs = self.pygame.observe()
+        obs = self.observe_world()
         reward = self.pygame.evaluate()
         done = self.pygame.is_done()
         return obs, reward, done, {}
 
     def render(self, mode="human", close=False):
         self.pygame.view()
+
+    # Util functions
+
+    def observe_world(self):
+        per = self.pygame.observe()
+        #obs: [dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
+        obs = []
+        #dist_to_objective
+        if per[-10][:-1] == 'inf':
+            obs.append(int(self.observation_space.high[0]))
+        #dist_to_enemy
+        if per[0][:-1] == 'inf':
+            obs.append(int(self.observation_space.high[0]))
+        #dist_to_coin
+        if per[2][:-1] == 'inf':
+            obs.append(int(self.observation_space.high[0]))
+        #dist_to_cake
+        if per[1][:-1] == 'inf':
+            obs.append(int(self.observation_space.high[0]))
+        #health
+        obs.append(int(per[-9][:-1]))
+        #% of coins
+        if self.map.number_of_coins != 0:
+            obs.append(float(per[-8][:-1]) / self.map.number_of_coins)
+        else:
+            obs.append(1)
+        #% of enemies
+        if self.map.number_of_enemies != 0:
+            obs.append(float(per[-7][:-1]) / self.map.number_of_enemies)
+        else: 
+            obs.append(1)
 
     def convert_action_to_game_action(self, action):
         #check if action is complex
