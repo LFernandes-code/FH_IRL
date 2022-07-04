@@ -2067,7 +2067,7 @@ def fader_replay(date_time, frame_rate, map_name, map_height, map_width, small_f
 
 
 
-def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions, save_perceptor = False):
+def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions, save_perceptor = False, cluster_file = ""):
 
 
 	#variable to control the main loop
@@ -2075,6 +2075,13 @@ def replay_from_trace(file_location, frame_rate, map_name, map_height, map_width
 
 
 	date_time = file_location[41:(len(file_location)-4)]
+	if cluster_file != "":
+		print(date_time)
+		if date_time[0] == '_':
+			date_time = date_time[1:]
+		print(date_time)
+		date_time = date_time[:8] + cluster_file + "_" + date_time[8:]
+		print(date_time)
 
 	read_path = file_location
 

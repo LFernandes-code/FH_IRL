@@ -24,8 +24,8 @@ def generate_trace_perceptor(level, cluster_threshold):
             for element in cluster_elements:
                 if element[0] == 'T' and element[-3:] == 'txt':
                     print(element)
-                    trace_file = dir + "/" + element 
-                    replay_from_trace(trace_file, frame_rate, level, MAP_HEIGHT, MAP_WIDTH, small_fontzy, medium_fontzy, big_fontzy, num_directions, True)
-
+                    trace_file = dir + "/" + element
+                    replay_from_trace(trace_file, frame_rate, level, MAP_HEIGHT, MAP_WIDTH, small_fontzy, medium_fontzy, big_fontzy, num_directions, True, cluster.split('_____')[0])
+    
 level = 'Level1'
-generate_trace_perceptor(level, 20)
+generate_trace_perceptor(level, 6)
