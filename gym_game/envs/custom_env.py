@@ -71,6 +71,8 @@ class FHEnv(gym.Env):
             obs.append(float(per[-7][:-1]) / self.map.number_of_enemies)
         else: 
             obs.append(1)
+        
+        return obs
 
     def convert_action_to_game_action(self, action):
         #check if action is complex
