@@ -17,7 +17,7 @@ class FHEnv(gym.Env):
         #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
         self.action_space = spaces.Discrete(9)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
-        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0, 0, 0]), np.array([301, 301, 301, 301, 100, 1, 1]), dtype=np.float)
+        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0, 0, 0]), np.array([315, 315, 315, 315, 100, 1, 1]), dtype=np.float)
         
         self.doing_action = False
         self.action_plan = []
@@ -27,13 +27,13 @@ class FHEnv(gym.Env):
         map_used = self.map_id
         del self.pygame
         self.pygame = PyGame2D(map_used)
-        obs = self.observe_world()
+        obs = self.observe_world(self.pygame.observe())
         return obs
 
     def step(self, action):
         game_action = self.convert_action_to_game_action(action)
         self.pygame.action(game_action)
-        obs = self.observe_world()
+        obs = self.observe_world(self.pygame.observe())
         reward = self.pygame.evaluate()
         done = self.pygame.is_done()
         return obs, reward, done, {}
@@ -43,22 +43,34 @@ class FHEnv(gym.Env):
 
     # Util functions
 
-    def observe_world(self):
-        per = self.pygame.observe()
+    def observe_world(self, reading):
+        per = reading
         #obs: [dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
         obs = []
         #dist_to_objective
         if per[-10][:-1] == 'inf':
             obs.append(int(self.observation_space.high[0]))
+        else:
+            value = min(int(self.observation_space.high[0]), int(float(per[-10][:-1])))
+            obs.append(value)
         #dist_to_enemy
         if per[0][:-1] == 'inf':
             obs.append(int(self.observation_space.high[1]))
+        else:
+            value = min(int(self.observation_space.high[0]), int(float(per[0][:-1])))
+            obs.append(value)
         #dist_to_coin
         if per[2][:-1] == 'inf':
             obs.append(int(self.observation_space.high[2]))
+        else:
+            value = min(int(self.observation_space.high[0]), int(float(per[2][:-1])))
+            obs.append(value)
         #dist_to_cake
         if per[1][:-1] == 'inf':
             obs.append(int(self.observation_space.high[3]))
+        else:
+            value = min(int(self.observation_space.high[0]), int(float(per[1][:-1])))
+            obs.append(value)
         #health
         obs.append(int(per[-9][:-1]))
         #% of coins
