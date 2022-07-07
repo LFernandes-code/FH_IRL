@@ -13,6 +13,6 @@ if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     #env.reset()
     #env.step(3)
-    a = "20.44"
-    b = int(float(a))
-    print(min(b,30))
+    a = '[0]'
+    e = a.split(",")
+    print(e)

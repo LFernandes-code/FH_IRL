@@ -41,14 +41,41 @@ def process_perceptor_files(level, env, cluster_threshold):
             dir = level_cluster + "/" + cluster
             for element in cluster_elements:
                 if element[0] == 'P' and element[-3:] == 'txt':
-                    file = open((dir + "/" + element),'r')
+                    perceptor_file = open((dir + "/" + element),'r')
+                    action_file_location = "Traces_Actions_" + '_'.join(element.split('_')[4:])
+                    action_file = open((dir + "/" + action_file_location),'r')
                     processed_file = open((dir + "/" + "A_" + element),'w')
-                    for line in file.readlines():
-                        data = env.observe_world(ast.literal_eval(line[:-1]))
+
+                    perceptor_lines = perceptor_file.readlines()
+                    action_lines = action_file.readlines()
+                    i = 0
+                    last_action = "_____"
+                    for line_id in range(len(perceptor_lines)):
+                        perceptor_data = perceptor_lines[line_id]
+                        action_data = action_lines[line_id]
+                        
+                        ac = process_action(action_data[:-1], last_action)
+                        last_action = ac
+                        print(ac)
+                        
+                        i+=1
+                        if i == 26:
+                            exit()
+                        
+                        data = env.observe_world(ast.literal_eval(perceptor_data[:-1]))
                         processed_file.write(str(data))
                         processed_file.write("\n")
 
-
+def process_action(action_line, previous_action):
+    if action_line == "[]":
+        return "wait"
+    else:
+        line_values = action_line.split(',')
+        if len(line_values) == 1:
+            return previous_action
+        else:
+            print(line_values)
+            pass
 
 level = 'Level1'
 env = gym.make("FlowerHunter-v0", map_name = level)

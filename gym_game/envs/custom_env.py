@@ -17,7 +17,7 @@ class FHEnv(gym.Env):
         #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
         self.action_space = spaces.Discrete(9)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
-        self.observation_space = spaces.Box(np.array([0, 0, 0, 0, 0, 0, 0]), np.array([315, 315, 315, 315, 100, 1, 1]), dtype=np.float)
+        self.observation_space = spaces.Box(np.array([29, 29, 29, 29, 0, 0, 0]), np.array([325, 325, 325, 325, 100, 10, 10]), dtype=np.int)
         
         self.doing_action = False
         self.action_plan = []
@@ -75,14 +75,16 @@ class FHEnv(gym.Env):
         obs.append(int(per[-9][:-1]))
         #% of coins
         if self.map.number_of_coins != 0:
-            obs.append(float(per[-8][:-1]) / self.map.number_of_coins)
+            value = int( (float(per[-8][:-1]) / self.map.number_of_coins) *  self.observation_space.high[-2])
+            obs.append(value)
         else:
-            obs.append(1)
+            obs.append(self.observation_space.high[-2])
         #% of enemies
         if self.map.number_of_enemies != 0:
-            obs.append(float(per[-7][:-1]) / self.map.number_of_enemies)
-        else: 
-            obs.append(1)
+            value = int( (float(per[-7][:-1]) / self.map.number_of_enemies) *  self.observation_space.high[-2])
+            obs.append(value)
+        else:
+            obs.append(self.observation_space.high[-2])
         
         return obs
 
