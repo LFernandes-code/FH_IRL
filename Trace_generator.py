@@ -41,28 +41,34 @@ def process_perceptor_files(level, env, cluster_threshold):
             dir = level_cluster + "/" + cluster
             for element in cluster_elements:
                 if element[0] == 'P' and element[-3:] == 'txt':
+                    #files
+                    #perceptor file to read
                     perceptor_file = open((dir + "/" + element),'r')
+                    #action file to read
                     action_file_location = "Traces_Actions_" + '_'.join(element.split('_')[4:])
                     action_file = open((dir + "/" + action_file_location),'r')
+                    #file to write state-action pairs
                     processed_file = open((dir + "/" + "A_" + element),'w')
 
+                    #read lines of files
                     perceptor_lines = perceptor_file.readlines()
                     action_lines = action_file.readlines()
-                    i = 0
-                    last_action = []
+                    #last actions that were executed
+                    last_actions = []
+
                     for line_id in range(len(perceptor_lines)):
+                        #read line with id to read the same line of both files
                         perceptor_data = perceptor_lines[line_id]
                         action_data = action_lines[line_id]
                         
-                        ac = process_action(action_data[:-1], last_action)
-                        last_action = ac
-                        print(ac)
+                        #process the action acording to previus actions
+                        ac = process_action(action_data[:-1], last_actions)
+                        last_actions = ac
                         
-                        i+=1
-                        if i == 26:
-                            exit()
-                        
+                        #convert perceptor file data to the enviroment values
                         data = env.observe_world(ast.literal_eval(perceptor_data[:-1]))
+
+                        #write processed data
                         processed_file.write(str(data))
                         processed_file.write("||")
                         processed_file.write(str(ac))
@@ -80,8 +86,6 @@ def process_action(action_line, previous_actions):
             for action in actions:
                 p_action = action.replace("'", "")
                 if len(p_action) == 3:
-                    #print("QQQQQQQQ", p_action[1:])
-                    #print("EEEEEEEE", previous_actions)
                     if p_action[1] in previous_actions:
                         previous_actions.remove(p_action[1])
                     else:
