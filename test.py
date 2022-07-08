@@ -13,6 +13,8 @@ if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     #env.reset()
     #env.step(3)
-    a = []
-    if 2 not in a:
-        a.append(2)
+    a = [1,2,3]
+    a.remove(2)
+    a.remove(4)
+    print(a)
+    
