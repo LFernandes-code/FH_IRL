@@ -49,7 +49,7 @@ def process_perceptor_files(level, env, cluster_threshold):
                     perceptor_lines = perceptor_file.readlines()
                     action_lines = action_file.readlines()
                     i = 0
-                    last_action = "_____"
+                    last_action = []
                     for line_id in range(len(perceptor_lines)):
                         perceptor_data = perceptor_lines[line_id]
                         action_data = action_lines[line_id]
@@ -64,18 +64,30 @@ def process_perceptor_files(level, env, cluster_threshold):
                         
                         data = env.observe_world(ast.literal_eval(perceptor_data[:-1]))
                         processed_file.write(str(data))
+                        processed_file.write("||")
+                        processed_file.write(str(ac))
                         processed_file.write("\n")
 
-def process_action(action_line, previous_action):
+def process_action(action_line, previous_actions):
     if action_line == "[]":
-        return "wait"
+        return []
     else:
-        line_values = action_line.split(',')
+        line_values = action_line[:-1].split(',')
         if len(line_values) == 1:
-            return previous_action
+            return previous_actions
         else:
-            print(line_values)
-            pass
+            actions = line_values[1:]
+            for action in actions:
+                p_action = action.replace("'", "")
+                if len(p_action) == 3:
+                    #print("QQQQQQQQ", p_action[1:])
+                    #print("EEEEEEEE", previous_actions)
+                    if p_action[1] in previous_actions:
+                        previous_actions.remove(p_action[1])
+                    else:
+                        previous_actions.append(p_action[1])
+            
+            return previous_actions
 
 level = 'Level1'
 env = gym.make("FlowerHunter-v0", map_name = level)
