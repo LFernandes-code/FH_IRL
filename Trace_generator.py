@@ -55,7 +55,7 @@ def process_perceptor_files(level, env, cluster_threshold):
                     action_lines = action_file.readlines()
                     #last actions that were executed
                     last_actions = []
-                    i = 0
+            
                     for line_id in range(len(perceptor_lines)):
                         #read line with id to read the same line of both files
                         perceptor_data = perceptor_lines[line_id]
@@ -64,7 +64,6 @@ def process_perceptor_files(level, env, cluster_threshold):
                         #process the action acording to previus actions
                         ac = process_action(action_data[:-1], last_actions)
                         last_actions = ac
-                        print(ac)
                         #convert perceptor file data to the enviroment values
                         data = env.observe_world(ast.literal_eval(perceptor_data[:-1]))
 
@@ -74,10 +73,6 @@ def process_perceptor_files(level, env, cluster_threshold):
                         processed_file.write(str(ac))
                         processed_file.write("\n")
 
-                        i+=1
-                        if i > 8:
-                            exit()
-#previous_actions
 def process_action(action_line, last_actions):
     previous_actions = last_actions
     if action_line == "[]":
@@ -86,7 +81,7 @@ def process_action(action_line, last_actions):
         if 'sw' in previous_actions:
             previous_actions.remove('sw')
         line_values = action_line[:-1].split(',')
-        print(line_values)
+
         if len(line_values) == 1:
             return previous_actions
         else:
