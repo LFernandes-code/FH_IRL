@@ -77,6 +77,18 @@ def process_action(action_line, previous_action):
             print(line_values)
             pass
 
+def evaluate_state(state):
+    reward = 0
+    if self.player_dead:
+        reward = -10000 + self.perceptor.distance_to_objective
+    elif self.player_won:
+        reward = 10000 
+    # add reward based of % coins collected
+    reward += (self.perceptor.money * 1000)
+    # add reward based of % enemies killed
+    reward += (self.perceptor.kills * 1000)
+    return reward
+
 level = 'Level1'
 env = gym.make("FlowerHunter-v0", map_name = level)
 env.reset()
