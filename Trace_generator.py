@@ -6,6 +6,9 @@ from tqdm import tqdm
 import gym_game
 import gym
 
+from imitation.data.types import TrajectoryWithRew
+import numpy as np
+
 def generate_trace_perceptor(level, cluster_threshold):
     map_name = "Maps/" + level + ".csv"
     level_cluster =  "Clusters/" + level + "_clusters"
@@ -55,7 +58,7 @@ def process_perceptor_files(level, env, cluster_threshold):
                     action_lines = action_file.readlines()
                     #last actions that were executed
                     last_actions = []
-            
+                    last_state = ""
                     for line_id in range(len(perceptor_lines)):
                         #read line with id to read the same line of both files
                         perceptor_data = perceptor_lines[line_id]
@@ -68,10 +71,16 @@ def process_perceptor_files(level, env, cluster_threshold):
                         data = env.observe_world(ast.literal_eval(perceptor_data[:-1]))
 
                         #write processed data
+                        last_state = str(data)
                         processed_file.write(str(data))
                         processed_file.write("||")
                         processed_file.write(str(ac))
                         processed_file.write("\n")
+                    
+                    processed_file.write(last_state)
+                    processed_file.write("||")
+                    processed_file.write("\n")
+                    
 
 def process_action(action_line, last_actions):
     previous_actions = last_actions
@@ -100,20 +109,35 @@ def process_action(action_line, last_actions):
             return previous_actions
 
 def evaluate_state(state):
+    # State[dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
     reward = 0
-    if self.player_dead:
-        reward = -10000 + self.perceptor.distance_to_objective
-    elif self.player_won:
+    if state[4] == 0:
+        reward = -10000 + state[0]
+    elif state[0] <= 30:
         reward = 10000 
     # add reward based of % coins collected
-    reward += (self.perceptor.money * 1000)
+    reward += (state[-2] * 1000)
     # add reward based of % enemies killed
-    reward += (self.perceptor.kills * 1000)
+    reward += (state[-1] * 1000)
     return reward
 
-level = 'Level1'
-env = gym.make("FlowerHunter-v0", map_name = level)
-env.reset()
-cluster_threshold = 6
-#generate_trace_perceptor(level, cluster_threshold)
-process_perceptor_files(level, env, cluster_threshold)
+def generate_trajectories(cluster_id, cluster_folder):
+    traj = []
+    cluster_dir = "Clusters/" + cluster_folder + "/" + cluster_id
+    cluster_files = os.listdir(cluster_dir)
+    for file in cluster_files:
+        if file[0] == 'A':
+            tr = TrajectoryWithRew([0,0],[1],None,terminal=True,rews=np.array([1.0]))
+            traj.append(tr)
+            print(file)
+
+    return traj
+
+if __name__ == "__main__":
+    level = 'Level1'
+    env = gym.make("FlowerHunter-v0", map_name = level)
+    env.reset()
+    cluster_threshold = 6
+    t = generate_trajectories("5_____10", "Level1_clusters")
+    #generate_trace_perceptor(level, cluster_threshold)
+    #process_perceptor_files(level, env, cluster_threshold)
