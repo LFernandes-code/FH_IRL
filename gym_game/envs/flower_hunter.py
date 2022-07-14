@@ -2671,7 +2671,7 @@ class PyGame2D:
 		#preform action
 
 		self.actions_to_save = [self.counter]
-
+		print("QQQQQ: ",action)
 		if action == 'n':
 			self.action_list.append(self.actions_to_save)
 		else:

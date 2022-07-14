@@ -15,7 +15,7 @@ class FHEnv(gym.Env):
         self.map = Mem_Map(self.map_id)
         
         #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
-        self.action_space = spaces.Discrete(9)
+        self.action_space = spaces.Discrete(10)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
         self.observation_space = spaces.Box(np.array([20, 20, 20, 20, 0, 0, 0]), np.array([330, 330, 330, 330, 100, 10, 10]), dtype=np.int)
         
@@ -31,7 +31,10 @@ class FHEnv(gym.Env):
         return obs
 
     def step(self, action):
+        print("WWWWWWWWWWW: ", action)
         game_action = self.convert_action_to_game_action(action)
+        print("WWWWWWWWW2WW: ", game_action)
+
         self.pygame.action(game_action)
         obs = self.observe_world(self.pygame.observe())
         reward = self.pygame.evaluate()
@@ -106,6 +109,7 @@ class FHEnv(gym.Env):
             return self.attack_direction_action(enemy_dir)
         
         elif action < 8:
+            print("WWWWWWWQQQQQ:")
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
@@ -114,7 +118,7 @@ class FHEnv(gym.Env):
                 return self.action_plan.pop(0)
             else:
                 #run A-star
-                p_cell = self.convert_position_to_cell((self.world.player.imagined_x, self.world.player.imagined_y))
+                p_cell = self.convert_position_to_cell((self.pygame.world.player.imagined_x, self.pygame.world.player.imagined_y))
                 item_cell = self.convert_position_to_cell(item_position)
                 action_diretions = self.map.a_star(p_cell, item_cell)
                 for direction in action_diretions:
@@ -139,6 +143,7 @@ class FHEnv(gym.Env):
 
     def get_direction_of_closest_enemy(self):
         distance_closest_enemy = self.pygame.perceptor.distance_closest_enemy
+        direction_closest_enemy = np.random.choice([0,90,180,270])
         for enemy in self.pygame.world.enemy_group:
             if self.pygame.world.in_view(enemy):
                 distance = math.sqrt((self.world.player.rect.x - enemy.rect.x )**2 + (self.world.player.rect.y - enemy.rect.y)**2 )
@@ -169,9 +174,9 @@ class FHEnv(gym.Env):
         position = None
 
         for item_sprite in sprite_group:
-            prov_distance = math.sqrt((self.world.screen_width/2 - item_sprite.rect.x)**2 + (self.world.screen_height/2 - item_sprite.rect.y)**2)
+            prov_distance = math.sqrt((self.pygame.world.screen_width/2 - item_sprite.rect.x)**2 + (self.pygame.world.screen_height/2 - item_sprite.rect.y)**2)
             if prov_distance < distance:
-                position = (self.world.player.imagined_x + item_sprite.rect.x, self.world.player.imagined_y + item_sprite.rect.y)
+                position = (self.pygame.world.player.imagined_x + item_sprite.rect.x, self.pygame.world.player.imagined_y + item_sprite.rect.y)
 
         return position
 
