@@ -115,7 +115,7 @@ class Mem_Map():
         (x2,y2) = end_postion
         return math.fabs(x1 - x2) + math.fabs(y1 - y2)
 
-    def a_star(self, start_position, end_position, max_iterations = 1000):
+    def a_star(self, start_position, end_position, max_iterations = 1500):
         # Create start and end node
         start_node = Node(None, start_position)
         end_node = Node(None, end_position)
