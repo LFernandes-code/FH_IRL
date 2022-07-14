@@ -165,7 +165,7 @@ if __name__ == "__main__":
     level = 'Level1'
     env = gym.make("FlowerHunter-v0", map_name = level)
     cluster_threshold = 6
-    t = generate_trajectories("5_____10", "Level1_clusters", env)
-    print(t)
+    #t = generate_trajectories("5_____10", "Level1_clusters", env)
+    #print(t)
     #generate_trace_perceptor(level, cluster_threshold)
-    #process_perceptor_files(level, env, cluster_threshold)
+    process_perceptor_files(level, env, cluster_threshold)
