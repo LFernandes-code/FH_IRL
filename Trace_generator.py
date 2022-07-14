@@ -126,8 +126,6 @@ def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270)
     cluster_files = os.listdir(cluster_dir)
     for file in cluster_files:
         if file[0] == 'A':
-            #tr = TrajectoryWithRew([0,0],[1],None,terminal=True,rews=np.array([1.0]))
-            #traj.append(tr)
             trace_file = open((cluster_dir + "/" + file), "r")
             obs = []
             acts = []
@@ -146,18 +144,14 @@ def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270)
                         action_id = min_index + 4
                     if 'sw' in action:
                         action_id = 4
-                    
-                acts.append(action_id)
-                i += 1
                 
                 obs.append(state)
-                rews.append(float(evaluate_state(state)))
-                
-                if i == 5:
-                    print(rews)
-                    print(obs)
-                    print(acts)
-                    exit()
+                if action [:-1] != '':
+                    acts.append(action_id)
+                    rews.append(float(evaluate_state(state)))
+
+            tr = TrajectoryWithRew(obs=obs,acts=acts,infos=None,terminal=True,rews=np.array(rews))
+            traj.append(tr)
 
     return traj
 
@@ -165,7 +159,7 @@ if __name__ == "__main__":
     level = 'Level1'
     env = gym.make("FlowerHunter-v0", map_name = level)
     cluster_threshold = 6
-    #t = generate_trajectories("5_____10", "Level1_clusters", env)
-    #print(t)
+    t = generate_trajectories("5_____10", "Level1_clusters", env)
+    print(t)
     #generate_trace_perceptor(level, cluster_threshold)
-    process_perceptor_files(level, env, cluster_threshold)
+    #process_perceptor_files(level, env, cluster_threshold)
