@@ -20,7 +20,7 @@ def generate_trace_perceptor(level, cluster_threshold):
     big_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 62)
     medium_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 32)
     small_fontzy =  pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 24)
-    screen = pygame.display.set_mode((MAP_WIDTH, MAP_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
     level_clusters = os.listdir(level_cluster)
     dir = ""
@@ -31,7 +31,7 @@ def generate_trace_perceptor(level, cluster_threshold):
             for element in cluster_elements:
                 if element[0] == 'T' and element[-3:] == 'txt':
                     trace_file = dir + "/" + element
-                    replay_from_trace(trace_file, frame_rate, level, MAP_HEIGHT, MAP_WIDTH, small_fontzy, medium_fontzy, big_fontzy, num_directions, True, cluster.split('_____')[0])
+                    replay_from_trace(trace_file, frame_rate, level, SCREEN_HEIGHT, SCREEN_WIDTH, small_fontzy, medium_fontzy, big_fontzy, num_directions, True, cluster.split('_____')[0])
 
 def process_perceptor_files(level, env, cluster_threshold):
     map_name = "Maps/" + level + ".csv"

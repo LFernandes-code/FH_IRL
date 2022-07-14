@@ -14,8 +14,8 @@ from email import encoders
 import glob
 #import predictor
 #import rule_based_agents
-MAP_HEIGHT = 600
-MAP_WIDTH = 600
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 600
 
 ACTION_LIST = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
 
@@ -926,10 +926,16 @@ class World(object):
 		for grasser in self.tile_group:
 			self.grass_surface.blit(grasser.image, grasser.rect)
 
+		#for f in self.flower_group:
+			#print("TEST FLOWER LOCATION 1", f.rect.x, f.rect.y)
+			#print("TEST FLOWER LOCATION 1_pl", player_x, player_y)
 
 		for dudette in self.all_group:
 			dudette.rect.x += self.screen_height/2 -15 - player_x
 			dudette.rect.y += self.screen_width/2 -15 - player_y
+
+		#for f in self.flower_group:
+			#print("TEST FLOWER LOCATION 2", f.rect.x, f.rect.y)
 
 		for tillete in self.tile_group:
 			tillete.rect.x += self.screen_height/2 -15 - player_x
@@ -1483,7 +1489,6 @@ def playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, m
 
 
 		for flower in world.flower_group:
-
 			if player.is_collided_with(flower):
 
 				if player_won == False:
@@ -2596,9 +2601,11 @@ class PyGame2D:
 		pygame.display.set_caption("Flower Hunter")
 		
 		self.clock = pygame.time.Clock()
+		self.width = SCREEN_WIDTH
+		self.height = SCREEN_HEIGHT
 
 		self.frame_rate = 0.0
-		self.screeno = pygame.display.set_mode([MAP_HEIGHT, MAP_WIDTH])
+		self.screeno = pygame.display.set_mode([SCREEN_HEIGHT, SCREEN_WIDTH])
 
 		big_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 62)
 		medium_fontzy = pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 32)
@@ -2611,14 +2618,14 @@ class PyGame2D:
 
 		self.num_directions = 8 #Needs to be divisable by 8
 
-		self.world = World(MAP_HEIGHT, MAP_WIDTH, 20, self.map_name, self.fonts[0])
-		
+		self.world = World(SCREEN_HEIGHT, SCREEN_WIDTH, 20, self.map_name, self.fonts[0])
+
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
 		
 		self.perceptor = Perceptor(self.world, math.inf, date_time, map_name, self.num_directions)
 		self.world.perceptor = self.perceptor
-		
+
 		self.world.update()
 		self.perceptor.update()
 
@@ -3153,15 +3160,16 @@ def main():
 		print(num)
 
 
-		map_name = "Level" + str(num)
+		map_name = "Level1" #+ str(num)
 
 		num_directions = 200 #Needs to be divisable by 8
 
-		agent_type = rule_based_agents.ParameterAgent
+		#agent_type = rule_based_agents.ParameterAgent
 
 		parameters = [80, 100, 30, 0, 60, 0, 60, 50, 50, 60]
+		playing_routine(frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, date_time, num_directions)
 
-		play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
+		#play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map_height, map_width, small_fontzy, medium_fontzy, big_fontzy, num_directions)
 
 
 #################################################################################################################
