@@ -8,7 +8,7 @@ class FHEnv(gym.Env):
     #metadata = {'render.modes' : ['human']}
     def __init__(self, map_name):
         self.game_actions = ['n', ' ', 'w', 's', 'a', 'd', 'wa', 'wd', 'sa', 'sd', 'w ', 's ', 'a ', 'd ', 'wa ', 'wd ', 'sa ', 'sd ']
-        self.available_actions = ['w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait']
+        self.available_actions = ['w', 's', 'a', 'd',' attack', 'go_objective', 'go_enemy', 'go_collect', 'go_health', 'wait']
         
         self.map_id = map_name
         self.pygame = PyGame2D(self.map_id)
@@ -17,7 +17,7 @@ class FHEnv(gym.Env):
         #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
         self.action_space = spaces.Discrete(9)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
-        self.observation_space = spaces.Box(np.array([29, 29, 29, 29, 0, 0, 0]), np.array([325, 325, 325, 325, 100, 10, 10]), dtype=np.int)
+        self.observation_space = spaces.Box(np.array([20, 20, 20, 20, 0, 0, 0]), np.array([330, 330, 330, 330, 100, 10, 10]), dtype=np.int)
         
         self.doing_action = False
         self.action_plan = []
@@ -93,7 +93,19 @@ class FHEnv(gym.Env):
         if action < 4:
             #basic actions
             return self.game_actions[action + 2]
-        elif action < 7:
+        
+        elif action == 4:
+            #(complex) go to dynamic object
+            #and attack
+            enemy_dir = self.get_direction_of_closest_enemy()
+            return self.attack_direction_action(enemy_dir, attack=True)
+        
+        elif action == 6:
+            #(complex) go to dynamic object
+            enemy_dir = self.get_direction_of_closest_enemy()
+            return self.attack_direction_action(enemy_dir)
+        
+        elif action < 8:
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
@@ -110,11 +122,6 @@ class FHEnv(gym.Env):
                     self.action_plan.append(self.action_tuple_to_key(direction))
 
                 return self.action_plan.pop(0)
-                
-        elif action == 7:
-            #(complex) go to dynamic object
-            enemy_dir = self.get_direction_of_closest_enemy()
-            return self.attack_direction_action(enemy_dir)
 
     def action_tuple_to_key(self, action_tuple):
         (x,y) = action_tuple
@@ -168,7 +175,7 @@ class FHEnv(gym.Env):
 
         return position
 
-    def attack_direction_action(self, direction_closest_enemy):
+    def attack_direction_action(self, direction_closest_enemy, attack = False):
         action = ''
         if (direction_closest_enemy < 22.5 and direction_closest_enemy >= 0) or (direction_closest_enemy <= 360 and direction_closest_enemy > 337.5):
             action = 'd'
@@ -189,7 +196,7 @@ class FHEnv(gym.Env):
         else:
             print("Error in directions!!!")
             exit()
-        if self.pygame.perceptor.distance_closest_enemy < 65:
+        if attack:
             action = action + ' '
         return action
 

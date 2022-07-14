@@ -81,7 +81,6 @@ def process_perceptor_files(level, env, cluster_threshold):
                     processed_file.write("||")
                     processed_file.write("\n")
                     
-
 def process_action(action_line, last_actions):
     previous_actions = last_actions
     if action_line == "[]":
@@ -121,23 +120,52 @@ def evaluate_state(state):
     reward += (state[-1] * 1000)
     return reward
 
-def generate_trajectories(cluster_id, cluster_folder):
+def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270):
     traj = []
     cluster_dir = "Clusters/" + cluster_folder + "/" + cluster_id
     cluster_files = os.listdir(cluster_dir)
     for file in cluster_files:
         if file[0] == 'A':
-            tr = TrajectoryWithRew([0,0],[1],None,terminal=True,rews=np.array([1.0]))
-            traj.append(tr)
+            #tr = TrajectoryWithRew([0,0],[1],None,terminal=True,rews=np.array([1.0]))
+            #traj.append(tr)
+            trace_file = open((cluster_dir + "/" + file), "r")
+            obs = []
+            acts = []
+            rews = []
+            i = 0
             print(file)
+            for line in trace_file.readlines():
+                state = ast.literal_eval(line.split('||')[0])
+                # analise action
+                action = line.split('||')[1]
+                action_id = len(env.available_actions) - 1
+                if action[:2] != "[]":
+                    min_dist = min(state[:4])
+                    if min_dist < distance_value:
+                        min_index=state[:4].index(min_dist)
+                        action_id = min_index + 4
+                    if 'sw' in action:
+                        action_id = 4
+                    
+                acts.append(action_id)
+                i += 1
+                
+                obs.append(state)
+                rews.append(float(evaluate_state(state)))
+                
+                if i == 5:
+                    print(rews)
+                    print(obs)
+                    print(acts)
+                    exit()
 
     return traj
 
 if __name__ == "__main__":
     level = 'Level1'
     env = gym.make("FlowerHunter-v0", map_name = level)
-    env.reset()
     cluster_threshold = 6
-    t = generate_trajectories("5_____10", "Level1_clusters")
+    t = generate_trajectories("5_____10", "Level1_clusters", env)
+    print(t)
     #generate_trace_perceptor(level, cluster_threshold)
     #process_perceptor_files(level, env, cluster_threshold)
