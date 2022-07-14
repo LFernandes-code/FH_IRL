@@ -126,6 +126,8 @@ class FHEnv(gym.Env):
                     self.action_plan.append(self.action_tuple_to_key(direction))
 
                 return self.action_plan.pop(0)
+        else:
+            return('n')
 
     def action_tuple_to_key(self, action_tuple):
         (x,y) = action_tuple
