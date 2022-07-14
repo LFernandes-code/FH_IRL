@@ -1,4 +1,5 @@
 from tkinter import NO
+from tkinter.tix import Tree
 import gym
 from gym import spaces
 import numpy as np
@@ -32,9 +33,7 @@ class FHEnv(gym.Env):
         return obs
 
     def step(self, action):
-        #print("WWWWWWWWWWW: ", action)
         game_action = self.convert_action_to_game_action(action)
-        print("WWWWWWWWW2WW: ", game_action)
 
         self.pygame.action(game_action)
         obs = self.observe_world(self.pygame.observe())
@@ -115,18 +114,23 @@ class FHEnv(gym.Env):
             item_position = self.get_position_of_closest_item(item_type)
             if item_position is None:
                 return('n')
-            elif action == self.current_action:
+            elif action == self.current_action and len(self.action_plan) != 0:
                 #execute plan
+                print("execute plan")
                 return self.action_plan.pop(0)
             else:
                 #run A-star
-                p_cell = self.convert_position_to_cell((self.pygame.world.player.imagined_x, self.pygame.world.player.imagined_y))
+                print("make plan")
+                p_cell = self.convert_position_to_cell((self.pygame.world.player.imagined_x, self.pygame.world.player.imagined_y),False)
                 item_cell = self.convert_position_to_cell(item_position)
                 action_diretions = self.map.a_star(p_cell, item_cell)
+                self.current_action = action
                 for direction in action_diretions:
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
-
+                    self.action_plan.append(self.action_tuple_to_key(direction))
+                    self.action_plan.append(self.action_tuple_to_key(direction))
+                #print(self.action_plan)
                 return self.action_plan.pop(0)
         else:
             return('n')
@@ -180,7 +184,7 @@ class FHEnv(gym.Env):
         for item_sprite in sprite_group:
             prov_distance = math.sqrt((self.pygame.world.screen_width/2 - item_sprite.rect.x)**2 + (self.pygame.world.screen_height/2 - item_sprite.rect.y)**2)
             if prov_distance < distance:
-                position = (self.pygame.world.player.imagined_x + item_sprite.rect.x, self.pygame.world.player.imagined_y + item_sprite.rect.y)
+                position = (item_sprite.rect.x,  item_sprite.rect.y)
 
         return position
 
@@ -209,5 +213,12 @@ class FHEnv(gym.Env):
             action = action + ' '
         return action
 
-    def convert_position_to_cell(self, position):
-        return tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
+    def convert_position_to_cell(self, position, convert = True):
+        if convert:
+            screen_dim = (self.pygame.height, self.pygame.width)
+            og_pos = tuple(map(lambda i, j, s: i + j + 15 - s/2, position, self.map.start_player_position, screen_dim)) 
+            cell = tuple(map(lambda i: ((i + 10) / 5) // 4 , og_pos))
+            cell = tuple(map(lambda i, j: i - j, cell, self.map.start_player_cell))
+        else:
+            cell = tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
+        return cell

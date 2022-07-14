@@ -51,6 +51,8 @@ def return_path(current_node):
 
 class Mem_Map():
     def __init__(self, map_name):
+        self.start_player_position = (0,0)
+        self.start_player_cell = (0,0)
         self.positions = self.load_map(map_name)
 
     def load_map(self, map_file):
@@ -58,26 +60,32 @@ class Mem_Map():
         file_path = "Maps/" + map_file + ".csv"
         file = open(file_path, "r")
         lines = file.readlines()
-        line_count = 0
+        sprite_size = 20
 
         #temporary list
         _position_pairs = []
         #final position list
         reletavive_position_pairs = []
-        player_position = ()
+        
 
         #number of items
         self.number_of_coins = 0
         self.number_of_enemies = 0
         self.number_of_cakes = 0
-            
+       
+        line_count = 0
         for line in lines:
+            column_count = 0
+            
             line = line.replace('	', '')
             line = line.replace(';', '')
-            column_count = 0
+            
             for letter in line:
-                if letter == '.' or letter == '0':
+                if letter == '.':
                     _position_pairs.append((column_count,line_count))
+                elif letter == '0':
+                    _position_pairs.append((column_count,line_count))
+                    end_pos = (column_count,line_count)
                 elif letter == "r":
                     _position_pairs.append((column_count,line_count))
                     self.number_of_cakes += 1
@@ -88,15 +96,16 @@ class Mem_Map():
                     _position_pairs.append((column_count,line_count))
                     self.number_of_enemies += 1
                 elif letter == 'p':
-                    player_position = (column_count,line_count)
+                    self.start_player_cell = (column_count,line_count)
+                    self.start_player_position = (column_count * sprite_size ,line_count * sprite_size)
                     
                 column_count += 1
             line_count += 1
-
         #changing postion to be relative to the player starting position
         for position in _position_pairs:
-            relative_pos = tuple(map(lambda i, j: i - j, position, player_position))
+            relative_pos = tuple(map(lambda i, j: i - j, position, self.start_player_cell))
             reletavive_position_pairs.append(relative_pos)
+        
         reletavive_position_pairs.append((0,0))
         
         return reletavive_position_pairs
@@ -115,7 +124,13 @@ class Mem_Map():
         (x2,y2) = end_postion
         return math.fabs(x1 - x2) + math.fabs(y1 - y2)
 
-    def a_star(self, start_position, end_position, max_iterations = 1500):
+    def a_star(self, start_position, end_position, max_iterations = 2000):
+        if type(start_position[0]) == float:
+            start_position = tuple(map(int, start_position))
+        
+        if type(end_position[0]) == float:
+            end_position = tuple(map(int, end_position))
+        print(end_position)
         # Create start and end node
         start_node = Node(None, start_position)
         end_node = Node(None, end_position)
@@ -138,6 +153,7 @@ class Mem_Map():
             if outer_iterations > max_iterations:
                 # if we hit this point return the path such as it is
                 # it will not contain the destination
+                
                 warn("giving up on pathfinding too many iterations")
                 return return_path(current_node)    
             
@@ -183,6 +199,7 @@ class Mem_Map():
 if __name__ == "__main__":
     start_time = time.time()
     Map = Mem_Map('Level1')
-    path = Map.a_star((0,0), (21,1))
+
+    path = Map.a_star((0,0), (102.0, 43.0))
     print(path)
     print("--- %s seconds ---" % (time.time() - start_time))
