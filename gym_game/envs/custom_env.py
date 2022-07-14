@@ -1,3 +1,4 @@
+from tkinter import NO
 import gym
 from gym import spaces
 import numpy as np
@@ -112,7 +113,9 @@ class FHEnv(gym.Env):
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
-            if action == self.current_action:
+            if item_position is None:
+                return('n')
+            elif action == self.current_action:
                 #execute plan
                 return self.action_plan.pop(0)
             else:
