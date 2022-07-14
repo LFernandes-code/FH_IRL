@@ -31,7 +31,7 @@ class FHEnv(gym.Env):
         return obs
 
     def step(self, action):
-        print("WWWWWWWWWWW: ", action)
+        #print("WWWWWWWWWWW: ", action)
         game_action = self.convert_action_to_game_action(action)
         print("WWWWWWWWW2WW: ", game_action)
 
@@ -109,7 +109,6 @@ class FHEnv(gym.Env):
             return self.attack_direction_action(enemy_dir)
         
         elif action < 8:
-            print("WWWWWWWQQQQQ:")
             #(complex) go to static objects
             item_type = self.available_actions[action].split('_')[1]
             item_position = self.get_position_of_closest_item(item_type)
@@ -148,8 +147,8 @@ class FHEnv(gym.Env):
         direction_closest_enemy = np.random.choice([0,90,180,270])
         for enemy in self.pygame.world.enemy_group:
             if self.pygame.world.in_view(enemy):
-                distance = math.sqrt((self.world.player.rect.x - enemy.rect.x )**2 + (self.world.player.rect.y - enemy.rect.y)**2 )
-                myradians = math.atan2(enemy.rect.y - self.world.player.rect.y, enemy.rect.x - self.world.player.rect.x)
+                distance = math.sqrt((self.pygame.world.player.rect.x - enemy.rect.x )**2 + (self.pygame.world.player.rect.y - enemy.rect.y)**2 )
+                myradians = math.atan2(enemy.rect.y - self.pygame.world.player.rect.y, enemy.rect.x - self.pygame.world.player.rect.x)
                 direction = math.degrees(myradians)
                 while(direction > 360):
                     direction -= 360
@@ -171,7 +170,7 @@ class FHEnv(gym.Env):
             sprite_group = self.pygame.world.flower_group
         elif item_type == 'health':
             sprite_group = self.pygame.world.food_group
-
+        
         distance = float('inf')
         position = None
 
