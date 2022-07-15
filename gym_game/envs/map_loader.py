@@ -7,6 +7,7 @@ import heapq
 from unicodedata import name
 from warnings import warn
 import time
+import matplotlib.pyplot as plt
 
 class Node():
     """A node class for A* Pathfinding"""
@@ -106,6 +107,10 @@ class Mem_Map():
             relative_pos = tuple(map(lambda i, j: i - j, position, self.start_player_cell))
             reletavive_position_pairs.append(relative_pos)
         
+        print(end_pos)
+        t_end = tuple(map(lambda i, j: i - j, end_pos, self.start_player_cell))
+        print(t_end)
+
         reletavive_position_pairs.append((0,0))
         
         return reletavive_position_pairs
@@ -123,6 +128,27 @@ class Mem_Map():
         (x1,y1) = position
         (x2,y2) = end_postion
         return math.fabs(x1 - x2) + math.fabs(y1 - y2)
+
+    def draw_map(self):
+        x,y = map(list, zip(*self.positions))
+        plt.scatter(x, y, c="red", alpha=0.5)
+        plt.show()
+    
+    def draw_path(self, path, star_position):
+        x,y = map(list, zip(*self.positions))
+        x2 = [star_position[0]]
+        y2 = [star_position[1]]
+        position_x = star_position[0]
+        position_y = star_position[1]
+        for action in path:
+            position_x = position_x + action[0]
+            position_y = position_y + action[1]
+            x2.append(position_x)
+            y2.append(position_y)
+         
+        plt.scatter(x, y, c='b', alpha=0.5)
+        plt.scatter(x2, y2, c='r', alpha=1)
+        plt.show()
 
     def a_star(self, start_position, end_position, max_iterations = 2000):
         if type(start_position[0]) == float:
@@ -199,7 +225,7 @@ class Mem_Map():
 if __name__ == "__main__":
     start_time = time.time()
     Map = Mem_Map('Level1')
-
     path = Map.a_star((0,0), (102.0, 43.0))
-    print(path)
+    #print(path)
+    Map.draw_path(path, (0,0))
     print("--- %s seconds ---" % (time.time() - start_time))
