@@ -38,14 +38,15 @@ gail_trainer = GAIL(
     venv=venv,
     gen_algo=learner,
     reward_net=reward_net,
+    allow_variable_horizon=True
 )
 start_time = time.time()
 learner_rewards_before_training, _ = evaluate_policy(
     learner, venv, 100, return_episode_rewards=True
 )
 print("done before train")
-gail_trainer.train(20000)  # Note: set to 300000 for better results
+gail_trainer.train(120000)  # Note: set to 300000 for better results
 learner_rewards_after_training, _ = evaluate_policy(
-    learner, venv, 100, return_episode_rewards=True, allow_variable_horizon=True
+    learner, venv, 100, return_episode_rewards=True
 )
 print("--- %s seconds ---" % (time.time() - start_time))

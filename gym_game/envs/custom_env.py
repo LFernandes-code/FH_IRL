@@ -120,10 +120,10 @@ class FHEnv(gym.Env):
                 return self.action_plan.pop(0)
             else:
                 #run A-star
-                print("make plan")
+                #print("make plan")
                 p_cell = self.convert_position_to_cell((self.pygame.world.player.imagined_x, self.pygame.world.player.imagined_y),False)
                 item_cell = self.convert_position_to_cell(item_position)
-                print(item_cell)
+    
                 action_diretions = self.map.a_star(p_cell, item_cell)
                 self.current_action = action
                 for direction in action_diretions:
@@ -131,7 +131,7 @@ class FHEnv(gym.Env):
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
-                #print(self.action_plan)
+
                 return self.action_plan.pop(0)
         else:
             return('n')

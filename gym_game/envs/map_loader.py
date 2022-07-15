@@ -86,7 +86,7 @@ class Mem_Map():
                     _position_pairs.append((column_count,line_count))
                 elif letter == '0':
                     _position_pairs.append((column_count,line_count))
-                    end_pos = (column_count,line_count)
+                    #end_pos = (column_count,line_count)
                 elif letter == "r":
                     _position_pairs.append((column_count,line_count))
                     self.number_of_cakes += 1
@@ -106,11 +106,7 @@ class Mem_Map():
         for position in _position_pairs:
             relative_pos = tuple(map(lambda i, j: i - j, position, self.start_player_cell))
             reletavive_position_pairs.append(relative_pos)
-        
-        print(end_pos)
-        t_end = tuple(map(lambda i, j: i - j, end_pos, self.start_player_cell))
-        print(t_end)
-
+    
         reletavive_position_pairs.append((0,0))
         
         return reletavive_position_pairs
@@ -156,7 +152,7 @@ class Mem_Map():
         
         if type(end_position[0]) == float:
             end_position = tuple(map(int, end_position))
-        print(end_position)
+            
         # Create start and end node
         start_node = Node(None, start_position)
         end_node = Node(None, end_position)
