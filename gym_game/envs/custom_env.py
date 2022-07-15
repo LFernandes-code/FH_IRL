@@ -116,13 +116,14 @@ class FHEnv(gym.Env):
                 return('n')
             elif action == self.current_action and len(self.action_plan) != 0:
                 #execute plan
-                print("execute plan")
+                #print("execute plan")
                 return self.action_plan.pop(0)
             else:
                 #run A-star
                 print("make plan")
                 p_cell = self.convert_position_to_cell((self.pygame.world.player.imagined_x, self.pygame.world.player.imagined_y),False)
                 item_cell = self.convert_position_to_cell(item_position)
+                print(item_cell)
                 action_diretions = self.map.a_star(p_cell, item_cell)
                 self.current_action = action
                 for direction in action_diretions:
@@ -184,7 +185,7 @@ class FHEnv(gym.Env):
         for item_sprite in sprite_group:
             prov_distance = math.sqrt((self.pygame.world.screen_width/2 - item_sprite.rect.x)**2 + (self.pygame.world.screen_height/2 - item_sprite.rect.y)**2)
             if prov_distance < distance:
-                position = (item_sprite.rect.x,  item_sprite.rect.y)
+                position = (self.pygame.world.player.imagined_x + item_sprite.rect.x,  self.pygame.world.player.imagined_y + item_sprite.rect.y)
 
         return position
 
