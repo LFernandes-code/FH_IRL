@@ -118,8 +118,6 @@ if __name__ == "__main__":
             rollouts = generate_trajectories(cluster, "Level1_clusters", env)
             if alg == "GAIL":
                 GAIL_IRL(cluster, rollouts)
-            elif alg == "MCE":
-                train_mce_irl(cluster, rollouts)
             elif alg == "BC":
                 bc_IRL(env, cluster, rollouts)
             #gail -> policy._predict(obs)
