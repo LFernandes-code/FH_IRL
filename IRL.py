@@ -8,7 +8,9 @@ from Trace_generator import *
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy
 from imitation.data import rollout
-from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, resettable_env
+
+from imitation.envs import resettable_env
+from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from imitation.rewards import reward_nets
 from imitation.rewards.reward_nets import BasicRewardNet
 from imitation.util.networks import RunningNorm
@@ -22,16 +24,11 @@ from imitation.algorithms.mce_irl import (
     TabularPolicy,
 )
 
-def train_mce_irl(cluster, demos, **kwargs):
-    state_venv = resettable_env.DictExtractWrapper(
-        DummyVecEnv([lambda: gym.make("FlowerHunter-v0", map_name = "Level1")] * 4), "state"
-    )
-    obs_venv = resettable_env.DictExtractWrapper(
-        DummyVecEnv([lambda: gym.make("FlowerHunter-v0", map_name = "Level1")] * 4), "obs"
-    )
+from imitation.algorithms import bc
 
+def train_mce_irl(env, cluster, demos, **kwargs):
     reward_net = reward_nets.BasicRewardNet(
-        env.pomdp_observation_space,
+        env.observation_space,
         env.action_space,
         use_action=False,
         use_next_state=False,
@@ -42,20 +39,28 @@ def train_mce_irl(cluster, demos, **kwargs):
     mce_irl = MCEIRL(demos, env, reward_net, linf_eps=1e-3)
     mce_irl.train(**kwargs)
 
-    """
-    imitation_trajs = rollout.generate_trajectories(
-        policy=mce_irl.policy,
-        venv=state_venv,
-        sample_until=rollout.make_min_timesteps(5000),
-    )
-    print("Imitation stats: ", rollout.rollout_stats(imitation_trajs))
-    """
-
     irl_cluster_file = "IRL/MCE_" + cluster + ".pl"
     file = open(irl_cluster_file, 'wb')
     pickle.dump(mce_irl.policy, file)
 
+def bc_IRL(env, cluster, rollouts):
+    transitions = rollout.flatten_trajectories(rollouts)
 
+    bc_trainer = bc.BC(
+    observation_space=env.observation_space,
+    action_space=env.action_space,
+    demonstrations=transitions,
+    )
+    
+    start_time = time.time()
+    
+    bc_trainer.train(n_epochs=200)
+    
+    irl_cluster_file = "IRL/BC_" + cluster + ".pl"
+    file = open(irl_cluster_file, 'wb')
+    pickle.dump(bc_trainer.policy, file)
+
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 def GAIL_IRL(cluster, rollouts):
     venv = DummyVecEnv([lambda: gym.make("FlowerHunter-v0", map_name = "Level1")] * 8)
@@ -96,7 +101,7 @@ def GAIL_IRL(cluster, rollouts):
     
 
 if __name__ == "__main__":
-    alg = "GAIL"
+    alg = "BC" #"GAIL"
     level = "Level1"
     cluster_threshold = 6
 
@@ -104,15 +109,24 @@ if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     
     #generate trajectories
-
+    #"""
     level_cluster =  "Clusters/" + level + "_clusters"
     level_clusters = os.listdir(level_cluster)
     print(level_clusters)
-    for cluster in tqdm(level_clusters):
+    for cluster in level_clusters:
         if int(cluster.split('_____')[1]) >= cluster_threshold:
             rollouts = generate_trajectories(cluster, "Level1_clusters", env)
             if alg == "GAIL":
                 GAIL_IRL(cluster, rollouts)
             elif alg == "MCE":
                 train_mce_irl(cluster, rollouts)
+            elif alg == "BC":
+                bc_IRL(env, cluster, rollouts)
             #gail -> policy._predict(obs)
+    #"""
+    
+    """
+    cluster = "15_____8"
+    rollouts = generate_trajectories(cluster, "Level1_clusters", env)
+    bc_IRL(env, cluster, rollouts)
+    #"""
