@@ -5,59 +5,24 @@ import random
 
 import gym
 import gym_game
+from stable_baselines3.common import base_class
 
-def simulate():
-    global epsilon, epsilon_decay
-    for episode in range(MAX_EPISODES):
+class IRL_agent():
+    #base_class.BasePolicy
+    def __init__(self, irl_alg, cluster):
+        self.policy = self.load_policy(irl_alg, cluster)
+        pass
 
-        # Init environment
-        state = env.reset()
-        total_reward = 0
+    def load_policy(self, irl_alg, cluster):
+        pass
 
-        # AI tries up to MAX_TRY times
-        for t in range(MAX_TRY):
-
-            # In the beginning, do random action to learn
-            if random.uniform(0, 1) < epsilon:
-                action = env.action_space.sample()
-            else:
-                action = np.argmax(q_table[state])
-
-            # Do action and get result
-            next_state, reward, done, _ = env.step(action)
-            total_reward += reward
-
-            # Get correspond q value from state, action pair
-            q_value = q_table[state][action]
-            best_q = np.max(q_table[next_state])
-
-            # Q(state, action) <- (1 - a)Q(state, action) + a(reward + rmaxQ(next state, all actions))
-            q_table[state][action] = (1 - learning_rate) * q_value + learning_rate * (reward + gamma * best_q)
-
-            # Set up for the next iteration
-            state = next_state
-
-            # Draw games
-            env.render()
-
-            # When episode is done, print reward
-            if done or t >= MAX_TRY - 1:
-                print("Episode %d finished after %i time steps with total reward = %f." % (episode, t, total_reward))
-                break
-
-        # exploring rate decay
-        if epsilon >= 0.005:
-            epsilon *= epsilon_decay
-
+    def select_action(self, obs):
+        return self.policy.predict(obs)
 
 if __name__ == "__main__":
-    env = gym.make("Pygame-v0")
-    MAX_EPISODES = 9999
-    MAX_TRY = 1000
-    epsilon = 1
-    epsilon_decay = 0.999
-    learning_rate = 0.1
-    gamma = 0.6
-    num_box = tuple((env.observation_space.high + np.ones(env.observation_space.shape)).astype(int))
-    q_table = np.zeros(num_box + (env.action_space.n,))
-    simulate()
+    env = gym.make("FlowerHunter-v0", map_name = "Level1")
+    env.reset()
+    done = False
+    while not done:
+        _, _, done,_ = env.step(5)
+        env.render()
