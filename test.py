@@ -23,9 +23,11 @@ if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     env.reset()
     done = False
+    """
     while not done:
         _, _, done,_ = env.step(5)
         env.render()
+    """
     """
     tup = (114.0, 59.0)
     if type(tup[0]) == float:

@@ -23,11 +23,17 @@ class IRL_Agent():
 
 if __name__ == "__main__":
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
-    agent = IRL_Agent("GAIL", "0")
+    agent = IRL_Agent("GAIL", "15_____8")
     obs = env.reset()
     done = False
+    q = env.observation_space.sample()
+    print(q)
+    ac = agent.select_action(q)
+    print(ac)
+    """
     act = agent.select_action(obs)
     while not done:
         obs, _, done,_ = env.step(act)
         act = agent.select_action(obs)
         env.render()
+    """
