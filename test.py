@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import math
 import random
+import os
 
 import gym
 import gym_game
@@ -56,5 +57,15 @@ def convert_position_to_cell(position):
     return tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
 
 if __name__ == "__main__":
-    file = open("Traces/Gym_Bot_Position_Level1_21-07-2022_08-38-44_185_GAIL15.txt", "r")
-    save_location("Traces/Gym_Bot_Position_Level1_21-07-2022_08-38-44_185_GAIL15.txt", "GAIL15")
+    level = "Level1"
+    algs = [ "DB", "BC"] #"GAIL",
+    
+    for alg in algs:
+        cluster_folder =  "Traces/" + alg
+        cluster_traces = os.listdir(cluster_folder)
+        for trace in cluster_traces:
+            if trace[0] == 'G':
+                tmp = trace.split('_')[-1]
+                img = tmp.split('.')[0]
+                save_location(cluster_folder + '/' + trace, cluster_folder + '/' +img)
+

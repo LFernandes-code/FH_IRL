@@ -23,24 +23,24 @@ class IRL_Agent():
         return self.policy.predict(obs)
 
 if __name__ == "__main__":
-    agent = IRL_Agent("GAIL", "15_____8")
-    env = gym.make("FlowerHunter-v0", map_name = "Level1")
-    obs = env.reset()
-    done = False
-    f_reward = -2
-    #"""
-    act = agent.select_action(obs)[0]
-    max_steps = 3000
-    current_step = 0
-    while not done:
-        print("step: ", current_step)
-        obs, r, done,_ = env.step(act)
+    clusters = ["10_____29","15_____8","9_____12","5_____10","2_____10"]
+    for cluster in clusters:
+        agent = IRL_Agent("BC", cluster)
+        env = gym.make("FlowerHunter-v0", map_name = "Level1")
+        obs = env.reset()
+        done = False
+
         act = agent.select_action(obs)[0]
-        f_reward = r
-        #env.render()
-        current_step += 1
-        if current_step >= max_steps:
-            print("Max step reached")
-            done = True
-    #"""
-    print("final rward: ", f_reward)
+        max_steps = 3000
+        current_step = 0
+        while not done:
+            obs, _, done,_ = env.step(act)
+            act = agent.select_action(obs)[0]
+
+            current_step += 1
+            if current_step >= max_steps:
+                print("Max step reached")
+                done = True
+                env.write_trace()
+        
+        print("done: ", cluster)

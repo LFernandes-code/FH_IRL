@@ -46,6 +46,12 @@ class FHEnv(gym.Env):
 
     # Util functions
 
+    def write_trace(self):
+        self.pygame.perceptor.write_to_file()
+        for pos_to_write in self.pygame.world.pos_to_write:
+            self.pygame.postextfile.write(pos_to_write)
+        self.pygame.postextfile.close()
+
     def observe_world(self, reading):
         per = reading
         #obs: [dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]

@@ -2640,7 +2640,7 @@ class PyGame2D:
 
 		
 		if self.saving_data:
-			self.pos_file_path = "Traces/Gym_Bot_Position_" + self.map_name + "_" + self.date_time + ".txt"
+			self.pos_file_path = "Traces/Gym_Bot_Position_DB_" + self.map_name + "_" + self.date_time + ".txt"
 			self.postextfile = open(self.pos_file_path, 'w')
 
 
@@ -2827,7 +2827,7 @@ class PyGame2D:
 	def evaluate(self):
 		reward = 0
 		if self.player_dead:
-			reward = -10000 + self.perceptor.distance_to_objective
+			reward = 10000 - self.perceptor.distance_to_objective
 		elif self.player_won:
 			reward = 10000 
 		# add reward based of % coins collected
