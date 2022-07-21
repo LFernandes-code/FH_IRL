@@ -82,4 +82,4 @@ if __name__ == "__main__":
 	
 	print(step_count)
 	#"""
-	#save_location("Traces/Gym_Bot_Position_Level1_21-07-2022_10-50-00_483_BC.txt", "Traces/Test")
+	save_location("Traces/Gym_Bot_Position_Level1_21-07-2022_12-53-18_231_G.txt", "Traces/Test-G-noEM")

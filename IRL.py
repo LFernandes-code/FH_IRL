@@ -165,7 +165,7 @@ def GAIL_IRL(cluster, rollouts):
     
 
 if __name__ == "__main__":
-    alg = "DB" #"BC" #"GAIL"
+    alg = "DB" #"BC" "GAIL"
     level = "Level1"
     cluster_threshold = 6
 

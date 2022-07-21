@@ -121,7 +121,7 @@ def evaluate_state(state):
     return reward
 """
 
-def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270):
+def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 180):
     traj = []
     cluster_dir = "Clusters/" + cluster_folder + "/" + cluster_id
     cluster_files = os.listdir(cluster_dir)
