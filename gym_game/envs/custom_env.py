@@ -37,9 +37,23 @@ class FHEnv(gym.Env):
 
         self.pygame.action(game_action)
         obs = self.observe_world(self.pygame.observe())
-        reward = self.pygame.evaluate()
+        reward = self.evaluate_state(obs)
         done = self.pygame.is_done()
         return obs, reward, done, {}
+
+    
+    def evaluate_state(self, state):
+        # State[dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
+        reward = 0
+        if state[4] == 0:
+            reward = -10000 + state[0]
+        elif state[0] <= 30:
+            reward = 10000 
+        # add reward based of % coins collected
+        reward += (state[-2]/self.observation_space.high[-2] * 1000)
+        # add reward based of % enemies killed
+        reward += (state[-1]/self.observation_space.high[-1] * 1000)
+        return reward
 
     def render(self, mode="human", close=False):
         self.pygame.view()
@@ -100,16 +114,19 @@ class FHEnv(gym.Env):
     def convert_action_to_game_action(self, action):
         #check if action is complex
         if action < 4:
+            self.current_action = action
             #basic actions
             return self.game_actions[action + 2]
         
         elif action == 4:
+            self.current_action = action
             #(complex) go to dynamic object
             #and attack
             enemy_dir = self.get_direction_of_closest_enemy()
             return self.attack_direction_action(enemy_dir, attack=True)
         
         elif action == 6:
+            self.current_action = action
             #(complex) go to dynamic object
             enemy_dir = self.get_direction_of_closest_enemy()
             return self.attack_direction_action(enemy_dir)
@@ -131,13 +148,13 @@ class FHEnv(gym.Env):
                 item_cell = self.convert_position_to_cell(item_position)
     
                 action_diretions = self.map.a_star(p_cell, item_cell)
-                self.current_action = action
                 for direction in action_diretions:
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
                     self.action_plan.append(self.action_tuple_to_key(direction))
 
+                self.current_action = action
                 return self.action_plan.pop(0)
         else:
             return('n')

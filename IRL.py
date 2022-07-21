@@ -90,7 +90,6 @@ def density_irl(cluster, rollouts, FAST = True):
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
-
 def train_mce_irl(env, cluster, demos, **kwargs):
     reward_net = reward_nets.BasicRewardNet(
         env.observation_space,

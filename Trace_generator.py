@@ -111,13 +111,13 @@ def evaluate_state(state):
     # State[dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
     reward = 0
     if state[4] == 0:
-        reward = -10000 + state[0]
+        reward = 10000 - state[0]
     elif state[0] <= 30:
         reward = 10000 
     # add reward based of % coins collected
-    reward += (state[-2] * 1000)
+    reward += (state[-2]/10 * 1000)
     # add reward based of % enemies killed
-    reward += (state[-1] * 1000)
+    reward += (state[-1]/10 * 1000)
     return reward
 
 def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270):
