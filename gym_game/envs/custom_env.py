@@ -13,7 +13,7 @@ class FHEnv(gym.Env):
         self.available_actions = ['w', 's', 'a', 'd',' attack', 'go_objective', 'go_enemy', 'go_collect', 'go_health', 'wait']
         
         self.map_id = map_name
-        self.pygame = PyGame2D(self.map_id)
+        self.pygame = PyGame2D(self.map_id, False)
         self.map = Mem_Map(self.map_id)
         
         #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'

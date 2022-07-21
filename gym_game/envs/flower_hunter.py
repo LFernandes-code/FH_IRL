@@ -2594,7 +2594,7 @@ def play_with_agent(agent_type, parameters, date_time, frame_rate, map_name, map
 
 # game
 class PyGame2D:
-	def __init__(self, map_name, saving_data = False) -> None:
+	def __init__(self, map_name, saving_data = True) -> None:
 		pygame.init()
 		logo = pygame.image.load("Images/30-30_samurai_ball_3.png")
 		pygame.display.set_icon(logo)
@@ -2612,7 +2612,7 @@ class PyGame2D:
 		small_fontzy =  pygame.font.Font(os.path.join("Fonts", 'MacondoSwashCaps.ttf'), 24)
 		self.fonts = [small_fontzy, medium_fontzy, big_fontzy]
 
-		date_time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") + "_" + str(random.randint(0, 1000))
+		self.date_time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S") + "_" + str(random.randint(0, 1000))
 
 		self.map_name = map_name
 
@@ -2623,7 +2623,7 @@ class PyGame2D:
 		self.player = Player(self.world.screen_width/2 -15, self.world.screen_height/2 -15, self.world)
 		self.world.player = self.player
 		
-		self.perceptor = Perceptor(self.world, math.inf, date_time, map_name, self.num_directions)
+		self.perceptor = Perceptor(self.world, math.inf, self.date_time, map_name, self.num_directions, saving_data)
 		self.world.perceptor = self.perceptor
 
 		self.world.update()
