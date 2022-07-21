@@ -106,7 +106,7 @@ def process_action(action_line, last_actions):
                     previous_actions.append('sw')
             
             return previous_actions
-
+"""
 def evaluate_state(state):
     # State[dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
     reward = 0
@@ -119,6 +119,7 @@ def evaluate_state(state):
     # add reward based of % enemies killed
     reward += (state[-1]/10 * 1000)
     return reward
+"""
 
 def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270):
     traj = []
@@ -148,7 +149,8 @@ def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 270)
                 obs.append(state)
                 if action [:-1] != '':
                     acts.append(action_id)
-                    rews.append(float(evaluate_state(state)))
+                    rews.append(float(env.evaluate_state(state)))
+                    #rews.append(float(evaluate_state(state)))
 
             tr = TrajectoryWithRew(obs=obs,acts=acts,infos=None,terminal=True,rews=np.array(rews))
             traj.append(tr)

@@ -172,13 +172,14 @@ if __name__ == "__main__":
     print('setup env')
     env = gym.make("FlowerHunter-v0", map_name = "Level1")
     
-    #generate trajectories
+    
     #"""
     level_cluster =  "Clusters/" + level + "_clusters"
     level_clusters = os.listdir(level_cluster)
     print(level_clusters)
     for cluster in level_clusters:
         if int(cluster.split('_____')[1]) >= cluster_threshold:
+            #generate trajectories
             rollouts = generate_trajectories(cluster, "Level1_clusters", env)
             if alg == "GAIL":
                 GAIL_IRL(cluster, rollouts)
@@ -186,7 +187,6 @@ if __name__ == "__main__":
                 bc_IRL(env, cluster, rollouts)
             elif alg == "DB":
                 density_irl(cluster, rollouts)
-            #gail -> policy._predict(obs)
     #"""
     
     """

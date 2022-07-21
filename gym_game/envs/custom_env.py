@@ -46,9 +46,9 @@ class FHEnv(gym.Env):
         # State[dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills]
         reward = 0
         if state[4] == 0:
-            reward = -10000 + state[0]
+            reward =  -state[0] * 2
         elif state[0] <= 30:
-            reward = 10000 
+            reward = 1000 
         # add reward based of % coins collected
         reward += (state[-2]/self.observation_space.high[-2] * 1000)
         # add reward based of % enemies killed
