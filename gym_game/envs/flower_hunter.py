@@ -2640,7 +2640,7 @@ class PyGame2D:
 
 		
 		if self.saving_data:
-			self.pos_file_path = "Traces/Gym_Bot_Position_DB_" + self.map_name + "_" + self.date_time + ".txt"
+			self.pos_file_path = "Traces/Gym_Bot_Position_" + self.map_name + "_" + self.date_time + "_BC.txt"
 			self.postextfile = open(self.pos_file_path, 'w')
 
 

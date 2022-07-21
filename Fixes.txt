@@ -1,0 +1,5 @@
+use map to check the collectables
+to stop actions
+
+don't use the perceptor for distances use map
+

@@ -31,9 +31,10 @@ if __name__ == "__main__":
         done = False
 
         act = agent.select_action(obs)[0]
-        max_steps = 3000
+        max_steps = 4000
         current_step = 0
         while not done:
+            print(current_step)
             obs, _, done,_ = env.step(act)
             act = agent.select_action(obs)[0]
 

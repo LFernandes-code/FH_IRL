@@ -16,7 +16,7 @@ class FHEnv(gym.Env):
         self.pygame = PyGame2D(self.map_id, False)
         self.map = Mem_Map(self.map_id)
         
-        #actions: 'w', 's', 'a', 'd', 'go_collect', 'go_health', 'go_objective', 'attack', 'wait'
+        #actions: 'w', 's', 'a', 'd',' attack', 'go_objective', 'go_enemy', 'go_collect', 'go_health', 'wait'
         self.action_space = spaces.Discrete(10)
         #obs: dist_to_objective, dist_to_enemy, dist_to_coin, dist_to_cake, health, %coins, %kills
         self.observation_space = spaces.Box(np.array([20, 20, 20, 20, 0, 0, 0]), np.array([330, 330, 330, 330, 100, 10, 10]), dtype=np.int)

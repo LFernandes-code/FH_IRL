@@ -57,8 +57,9 @@ def convert_position_to_cell(position):
     return tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
 
 if __name__ == "__main__":
+	"""
     level = "Level1"
-    algs = [ "DB", "BC"] #"GAIL",
+    algs = ["GAIL", "DB", "BC"]
     
     for alg in algs:
         cluster_folder =  "Traces/" + alg
@@ -69,3 +70,16 @@ if __name__ == "__main__":
                 img = tmp.split('.')[0]
                 save_location(cluster_folder + '/' + trace, cluster_folder + '/' +img)
 
+	"""
+	"""
+	env = gym.make("FlowerHunter-v0", map_name = "Level1")
+	obs = env.reset()
+	done = False
+	step_count = 0
+	while not done:
+		step_count += 1
+		_, _, done,_ = env.step(5)
+	
+	print(step_count)
+	#"""
+	#save_location("Traces/Gym_Bot_Position_Level1_21-07-2022_10-50-00_483_BC.txt", "Traces/Test")

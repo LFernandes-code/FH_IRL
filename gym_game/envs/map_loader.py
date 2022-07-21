@@ -54,6 +54,12 @@ class Mem_Map():
     def __init__(self, map_name):
         self.start_player_position = (0,0)
         self.start_player_cell = (0,0)
+
+        #number of items
+        self.number_of_coins = 0
+        self.number_of_enemies = 0
+        self.number_of_cakes = 0
+
         self.positions = self.load_map(map_name)
 
     def load_map(self, map_file):
@@ -67,12 +73,6 @@ class Mem_Map():
         _position_pairs = []
         #final position list
         reletavive_position_pairs = []
-        
-
-        #number of items
-        self.number_of_coins = 0
-        self.number_of_enemies = 0
-        self.number_of_cakes = 0
        
         line_count = 0
         for line in lines:
