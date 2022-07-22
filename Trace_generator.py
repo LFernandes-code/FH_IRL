@@ -157,11 +157,63 @@ def generate_trajectories(cluster_id, cluster_folder, env, distance_value = 180)
 
     return traj
 
+def generate_action_sequences(cluster_id, cluster_folder, env, distance_value = 180):
+    traj = []
+    cluster_dir = "Clusters/" + cluster_folder + "/" + cluster_id
+    cluster_files = os.listdir(cluster_dir)
+
+    for file in cluster_files:
+        if file[0] == 'A':
+            trace_file = open((cluster_dir + "/" + file), "r")
+            acts = []
+            i = 0
+            print(file)
+            lines = trace_file.readlines()
+            for line_id in range(len(lines) - 1):
+                c_line = lines[line_id]
+                n_line = lines[line_id + 1]
+                c_state = ast.literal_eval(c_line.split('||')[0])
+                n_state = ast.literal_eval(n_line.split('||')[0])
+                # analise action
+                action = c_line.split('||')[1]
+                action_ids = []
+                if action[:-1] == '[]':
+                    action_ids.append(len(env.available_actions) - 1)
+                elif 'sw' in action:
+                    action_ids.append(4)
+                elif ',' in action:
+                        #two actions
+                        print(action)
+                        ac = ast.literal_eval(action[:-1])
+                        action_ids.append(env.available_actions.index(ac[0]))
+                        action_ids.append(env.available_actions.index(ac[1]))      
+                else:
+                    # one action
+                    ac = action[:-1].replace('[','').replace(']','').replace("'",'')
+                    action_ids.append(env.available_actions.index(ac))
+                    
+               
+                #check complex action
+                min_dist = min(n_state[:4])
+                if min_dist < distance_value:
+                    min_index=n_state[:4].index(min_dist)
+                    action_ids.clear()
+                    action_ids.append(min_index + 5)
+            
+                acts += action_ids
+            
+            traj.append(acts)
+            print(acts)
+            print(len(acts))
+            exit()
+
+    return traj
+
 if __name__ == "__main__":
     level = 'Level1'
     env = gym.make("FlowerHunter-v0", map_name = level)
     cluster_threshold = 6
-    t = generate_trajectories("5_____10", "Level1_clusters", env)
-    print(t)
+    ac_plan = generate_action_sequences("78_1", "Level1_clusters", env)
+    print(ac_plan)
     #generate_trace_perceptor(level, cluster_threshold)
     #process_perceptor_files(level, env, cluster_threshold)

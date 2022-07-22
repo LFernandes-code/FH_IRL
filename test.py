@@ -5,10 +5,12 @@ import random
 import os
 
 import gym
+from sympy import primefactors
 import gym_game
 
 import time
 from gym_game.envs.map_loader import * 
+from Trace_generator import generate_action_sequences
 
 import matplotlib.pyplot as plt
 
@@ -57,9 +59,28 @@ def convert_position_to_cell(position):
     return tuple(map(lambda i: ((i + 10) / 5) // 4 , position))
 
 if __name__ == "__main__":
-	"""
-    level = "Level1"
-    algs = ["GAIL", "DB", "BC"]
+	level = "Level1"
+	#env = gym.make("FlowerHunter-v0", map_name = level)
+	ac = "['q']"
+	w = ac.replace('[','').replace(']','').replace("'",'')
+	print(ac)
+	print(w)
+	
+	
+
+"""
+	obs = env.reset()
+	done = False
+	step_count = 0
+	while not done:
+		step_count += 1
+		_, _, done,_ = env.step(5)
+	
+	print(step_count)
+	#"""
+
+"""
+    algs = ["GAIL", "DB", "BC"]generate_action_sequences
     
     for alg in algs:
         cluster_folder =  "Traces/" + alg
@@ -71,15 +92,3 @@ if __name__ == "__main__":
                 save_location(cluster_folder + '/' + trace, cluster_folder + '/' +img)
 
 	"""
-	"""
-	env = gym.make("FlowerHunter-v0", map_name = "Level1")
-	obs = env.reset()
-	done = False
-	step_count = 0
-	while not done:
-		step_count += 1
-		_, _, done,_ = env.step(5)
-	
-	print(step_count)
-	#"""
-	save_location("Traces/Gym_Bot_Position_Level1_21-07-2022_12-53-18_231_G.txt", "Traces/Test-G-noEM")
