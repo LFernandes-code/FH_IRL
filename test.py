@@ -61,11 +61,14 @@ def convert_position_to_cell(position):
 if __name__ == "__main__":
 	level = "Level1"
 	#env = gym.make("FlowerHunter-v0", map_name = level)
-	ac = "['q']"
-	w = ac.replace('[','').replace(']','').replace("'",'')
-	print(ac)
+	q = [1,2,3,4,5,6,7,8,9,10]
+	w =[]
+	for i in range(len(q) - 1):
+		w.append(q[i])
+		if i == len(q) - 2:
+			w.append(23)
+		
 	print(w)
-	
 	
 
 """
