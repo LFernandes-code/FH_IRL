@@ -1,5 +1,4 @@
 import gym
-import seals
 import gym_game
 import time
 import pickle
@@ -155,7 +154,7 @@ def GAIL_IRL(cluster, rollouts):
 
     start_time = time.time()
     
-    gail_trainer.train(120000)  # Note: set to 300000 for better results
+    gail_trainer.train(200000)  # Note: set to 300000 for better results
     
     irl_cluster_file = "IRL/GAIL_" + cluster + ".pl"
     file = open(irl_cluster_file, 'wb')
@@ -165,7 +164,7 @@ def GAIL_IRL(cluster, rollouts):
     
 
 if __name__ == "__main__":
-    alg = "DB" #"BC" "GAIL"
+    alg = "GAIL" #"DB" #"BC" 
     level = "Level1"
     cluster_threshold = 6
 
